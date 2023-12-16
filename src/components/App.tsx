@@ -1,6 +1,7 @@
 import { useColorMode } from "@chakra-ui/react";
 import "./App.css";
 import { Billing } from "./Billings/Billing";
+import { CustomerForm } from "./Customers/CustomerForm";
 
 function App() {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -11,8 +12,8 @@ function App() {
 
   return (
     <div id="App">
-      <Billing />
-      <></>
+      {/* <Billing /> */}
+      <CustomerForm />
     </div>
   );
 }

@@ -53,7 +53,7 @@ const BillingItemIdSelector = () => {
             <Button
               width="100%"
               marginX={2}
-              key={item.id}
+              key={item._id}
               onClick={() => {
                 addBillEntries(convertToBill(item));
                 toast({
@@ -62,6 +62,7 @@ const BillingItemIdSelector = () => {
                   status: "success",
                   duration: 1000,
                   isClosable: true,
+                  position: "top",
                 });
               }}
             >

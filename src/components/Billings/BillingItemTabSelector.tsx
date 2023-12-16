@@ -35,6 +35,7 @@ const BillingTabItemSelector = () => {
                   status: "success",
                   duration: 1000,
                   isClosable: true,
+                  position: "top",
                 });
               }}
               cursor="pointer"

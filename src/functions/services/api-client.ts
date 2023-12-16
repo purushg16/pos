@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { Customer } from "./customer-services";
 
 export interface FetchResponse<T> {
   data: T[];
@@ -25,5 +26,9 @@ export default class APIClient<T> {
     return axiosInstance
       .get<FetchResponse<T>>(this.endpoint, config)
       .then((res) => res.data);
+  };
+
+  postCustomer = (data: Customer) => {
+    return axiosInstance.post(this.endpoint, data);
   };
 }
