@@ -1,0 +1,12 @@
+gstinNo(string): Gstin number 
+products(array of object):
+    productId(string): product ID
+    quantity(number): purchased quantity 
+    salesPrice(number): Selling price of that particular product
+
+customer(string) 
+billAmount(number) 
+billType(wholesale/retail) 
+billerName(string) 
+itemHandled(boolean) 
+handler(string)
