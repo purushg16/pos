@@ -18,22 +18,26 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import useBillStore, { BillingEntry } from "../../functions/store/BillStore";
-import useCustomer, { Customer } from "../../functions/store/customerStore";
+import CustomerModal from "../Customers/CustomerModal";
+import { Customer } from "../../functions/services/customer-services";
+import useBillStore, { BillingEntry } from "../../functions/store/billStore";
+import useCustomers from "../../functions/hooks/useCustomers";
+import useCustomerStore from "../../functions/store/customerStore";
 
 export const BillingDetails = () => {
   const ref = useRef<HTMLInputElement>(null);
   const [customer, setCustomer] = useState<Customer>();
-  const selectCustomers = useCustomer((s) => s.selectCustomers);
-  const selectedCustomers = useCustomer((s) => s.selectedCustomers);
+  const selectCustomers = useCustomerStore((s) => s.selectCustomers);
+  const selectedCustomers = useCustomerStore((s) => s.selectedCustomers);
   const BillEntries = useBillStore((s) => s.BillEntries);
+
+  useCustomers({ type: "GET" });
 
   return (
     <Flex flexDirection={"column"} gap={2} height="95vh">
       <Box padding={2} border="1px solid #80808030" borderRadius={7}>
         <Heading size="1xl" mb={2}>
-          {" "}
-          Customer Details{" "}
+          Customer Details
         </Heading>
         <Menu>
           <MenuButton
@@ -45,7 +49,7 @@ export const BillingDetails = () => {
             {customer?.name || "Select Customer"}
           </MenuButton>
 
-          <MenuList width="100%">
+          <MenuList>
             <Box paddingX={2} marginY={2}>
               <InputGroup width="100%">
                 <InputLeftElement children={<BsSearch />} />
@@ -63,24 +67,27 @@ export const BillingDetails = () => {
               </InputGroup>
             </Box>
 
-            <VStack marginX={3} gap={3}>
-              {selectedCustomers?.map((customer: Customer, index) => (
-                <Button
-                  width="100%"
-                  marginX={2}
-                  key={index}
-                  onClick={() => {
-                    setCustomer(customer);
-                  }}
-                >
-                  {customer.name}
-                </Button>
-              ))}
-            </VStack>
+            <Box height={500} overflowY="scroll">
+              <VStack marginX={3} gap={3}>
+                <CustomerModal />
+
+                {selectedCustomers?.map((customer: Customer, index: number) => (
+                  <Button
+                    width="100%"
+                    marginX={2}
+                    key={index}
+                    onClick={() => {
+                      setCustomer(customer);
+                    }}
+                  >
+                    {customer.name}
+                  </Button>
+                ))}
+              </VStack>
+            </Box>
           </MenuList>
         </Menu>
       </Box>
-
       <Box padding={2} border="1px solid #80808030" borderRadius={7} flex="1">
         {BillEntries.length > 0 && (
           <React.Fragment>

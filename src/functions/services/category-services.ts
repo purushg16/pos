@@ -1,4 +1,4 @@
-import APIClient from "./api-client";
+import { APIGetClient, APIPostClient } from "./api-client";
 
 export interface Category {
   _id: string;
@@ -6,4 +6,7 @@ export interface Category {
   children: Category[];
 }
 
-export default new APIClient<Category>("/settings/allCategory");
+const GetCategory = new APIGetClient<Category>("/settings/allCategory");
+const PostCategory = new APIPostClient<Category>("/settings/allCategory");
+
+export { GetCategory, PostCategory };

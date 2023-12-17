@@ -13,14 +13,13 @@ import {
   Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 import useCategoryies from "../../functions/hooks/useCategories";
-import useBillStore from "../../functions/store/BillStore";
-import useCategoryStore from "../../functions/store/CategoryStore";
-import useProductStore from "../../functions/store/ProductStore";
+import useBillStore from "../../functions/store/billStore";
 import BillingItemIdSelector from "./BillingItemIdSelector";
 import BillingTabItemSelector from "./BillingItemTabSelector";
 import useProducts from "../../functions/hooks/useProducts";
+import useCategoryStore from "../../functions/store/categoryStore";
+import useProductStore from "../../functions/store/ProductStore";
 
 export const BillingHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,19 +32,8 @@ export const BillingHeader = () => {
   const clearProductFilters = useProductStore((s) => s.clearProductFilters);
   const reverseCategory = useCategoryStore((s) => s.reverseCategory);
 
-  const setCategories = useCategoryStore((s) => s.setCategories);
-  const { data: allCategories } = useCategoryies();
-
-  const setProductList = useProductStore((s) => s.setProductList);
-  const { data: allProducts } = useProducts();
-
-  useEffect(() => {
-    if (allCategories) setCategories(allCategories.data);
-  }, [allCategories]);
-
-  useEffect(() => {
-    if (allProducts) setProductList(allProducts.data);
-  }, [allProducts]);
+  useCategoryies({ type: "GET" });
+  useProducts({ type: "GET" });
 
   return (
     <Flex gap={5} alignItems="center" width="100%">
@@ -70,14 +58,19 @@ export const BillingHeader = () => {
             </ModalBody>
             <ModalFooter>
               <Button
-                onClick={() => reverseCategory()}
+                onClick={() => {
+                  reverseCategory();
+                  clearProductFilters();
+                }}
                 mx={2}
                 variant="outline"
+                colorScheme="yellow"
               >
                 To Top
               </Button>
 
               <Button
+                colorScheme="red"
                 onClick={() => {
                   clearCategoryFilters();
                   clearProductFilters();

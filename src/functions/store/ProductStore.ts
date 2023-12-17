@@ -3,20 +3,25 @@ import { Product } from "../services/inventory-services";
 
 interface ProductStore {
   baseProducts: Product[];
-  productsList: Product[];
   setProductList: (products: Product[]) => void;
+  clearProductFilters: () => void;
 
+  // By Category
+  productsList: Product[];
   searchProductsByCategory: (category: string) => void;
+
+  // By id
   searchedProductList: Product[];
   searchProductById: (digits: number[]) => void;
-  clearProductFilters: () => void;
 }
 
 const useProductStore = create<ProductStore>((set) => ({
   baseProducts: [],
   productsList: [],
-  setProductList: (products) => set(() => ({ baseProducts: products })),
   searchedProductList: [],
+
+  setProductList: (products) =>
+    set(() => ({ baseProducts: products, searchedProductList: products })),
 
   searchProductsByCategory: (category) => {
     set((store) => ({
@@ -33,11 +38,11 @@ const useProductStore = create<ProductStore>((set) => ({
 
         return itemDigits
           ? digits.every((digit, index) => digit === itemDigits[index])
-          : [];
+          : store.baseProducts;
       }),
     })),
 
-  clearProductFilters: () => set((store) => ({ productsList: [] })),
+  clearProductFilters: () => set(() => ({ productsList: [] })),
 }));
 
 export default useProductStore;

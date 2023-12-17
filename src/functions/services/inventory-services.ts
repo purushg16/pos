@@ -1,4 +1,4 @@
-import APIClient from "./api-client";
+import { APIGetClient, APIPostClient } from "./api-client";
 
 interface ProductSupplier {
   supplierId: string;
@@ -8,7 +8,7 @@ interface ProductSupplier {
 }
 
 export interface Product {
-  _id: string;
+  _id?: string;
   itemName: string;
   barCode: number;
   code: number;
@@ -16,7 +16,10 @@ export interface Product {
   category: string;
   taxRate: number;
   mrp: number;
-  suppliers: ProductSupplier[];
+  suppliers?: ProductSupplier[];
 }
 
-export default new APIClient<Product>("/inventory/allItems");
+const getAllProducts = new APIGetClient<Product>("/inventory/allItems");
+const postProduct = new APIPostClient<Product>("/inventory/addItem");
+
+export { getAllProducts, postProduct };

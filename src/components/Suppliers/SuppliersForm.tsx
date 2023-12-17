@@ -1,19 +1,8 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import useCustomers from "../../functions/hooks/useCustomers";
+import { Flex, Heading, Input, Button, Box, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 
-const CustomerForm = () => {
-  const toast = useToast();
-
-  const [newCustomer, editCustomer] = useState({
+export const SuppliersForm = () => {
+  const [newSupplier, editSupplier] = useState({
     name: "",
     number: parseInt(""),
     balance: parseInt(""),
@@ -21,59 +10,30 @@ const CustomerForm = () => {
   const [canSubmit, setSubmit] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-  const { refetch } = useCustomers({
-    type: "POST",
-    customer: newCustomer,
-  });
-
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
-    refetch().then((res) => {
-      const { data, isSuccess, isError } = res;
-
-      if (isSuccess) {
-        toast({
-          title: data.msg,
-          status: "success",
-          duration: 1000,
-          isClosable: true,
-          position: "top",
-        });
-        setLoading(false);
-        editCustomer({ name: "", number: 0, balance: 0 });
-      } else if (isError) {
-        toast({
-          title: data.message,
-          status: "error",
-          duration: 1000,
-          isClosable: true,
-          position: "top",
-        });
-      }
-    });
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (newCustomer.name && newCustomer.number) setSubmit(true);
-    else setSubmit(false);
-  });
+    if (newSupplier.name && newSupplier.number) setSubmit(true);
+  }, [newSupplier]);
 
   return (
     <Flex alignItems="center" justifyContent="center" height="100%">
       <Box width={500}>
-        <Heading> Add Customer </Heading>
+        <Heading> Add Supplier </Heading>
 
         <form onSubmit={(event) => onSubmit(event)}>
           <Flex flexDirection="column" gap={5} marginY={7}>
             <Box>
-              <Text>Customer Name</Text>
+              <Text>Supplier Name</Text>
               <Input
                 focusBorderColor="teal"
                 variant="flushed"
-                value={newCustomer.name}
+                value={newSupplier.name}
                 onChange={(event) => {
-                  editCustomer({ ...newCustomer, name: event.target.value });
+                  editSupplier({ ...newSupplier, name: event.target.value });
                 }}
               />
             </Box>
@@ -84,10 +44,10 @@ const CustomerForm = () => {
                 focusBorderColor="teal"
                 variant="flushed"
                 type="number"
-                value={newCustomer.number}
+                value={newSupplier.number}
                 onChange={(event) => {
-                  editCustomer({
-                    ...newCustomer,
+                  editSupplier({
+                    ...newSupplier,
                     number: parseInt(event.target.value),
                   });
                 }}
@@ -100,10 +60,10 @@ const CustomerForm = () => {
                 focusBorderColor="teal"
                 variant="flushed"
                 type="number"
-                value={newCustomer.balance}
+                value={newSupplier.balance}
                 onChange={(event) => {
-                  editCustomer({
-                    ...newCustomer,
+                  editSupplier({
+                    ...newSupplier,
                     balance: parseFloat(event.target.value),
                   });
                 }}
@@ -116,9 +76,9 @@ const CustomerForm = () => {
               my={2}
               isLoading={isLoading}
               isDisabled={!canSubmit}
-              loadingText="Adding Customer..."
+              loadingText="Adding Supplier..."
             >
-              Add Customer
+              Add Supplier
             </Button>
           </Flex>
         </form>
@@ -126,5 +86,3 @@ const CustomerForm = () => {
     </Flex>
   );
 };
-
-export default CustomerForm;

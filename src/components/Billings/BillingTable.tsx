@@ -14,7 +14,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import useBillStore from "../../functions/store/BillStore";
+import useBillStore from "../../functions/store/billStore";
 
 export const BillingTable = () => {
   const { BillEntries, updateBillEntryQuantity, updateBillEntryPrice } =
@@ -34,9 +34,8 @@ export const BillingTable = () => {
   }
 
   return (
-    <TableContainer width="100%">
+    <TableContainer>
       <Table
-        width="100%"
         variant="unstyled"
         size="md"
         border="0.1px solid #d9d9d9"
@@ -44,8 +43,8 @@ export const BillingTable = () => {
         overflow="hidden"
         padding={2}
       >
-        <Thead background="#f1f1f1" border="0.1px solid #d9d9d9">
-          <Tr>
+        <Thead width="100%" background="#7a7a7a21" border="0.1px solid #d9d9d9">
+          <Tr width="100%">
             <Th borderRight="0.1px solid #d9d9d9"> # </Th>
             <Th borderRight="0.1px solid #d9d9d9"> Item Code </Th>
             <Th borderRight="0.1px solid #d9d9d9"> Item Name </Th>

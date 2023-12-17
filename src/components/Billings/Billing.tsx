@@ -1,14 +1,13 @@
-import { Box, Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { BillingDetails } from "./BillingDetails";
 import { BillingHeader } from "./BillingHeader";
 import { BillingTable } from "./BillingTable";
-import useCategoryies from "../../functions/hooks/useCategories";
 
-export const Billing = () => {
+const Billing = () => {
   return (
     <Grid
       templateAreas={`"table details"`}
-      gridTemplateColumns={"1fr 450px"}
+      gridTemplateColumns={"1fr 30%"}
       padding={5}
     >
       <GridItem area={"table"}>
@@ -28,7 +27,7 @@ export const Billing = () => {
             <BillingHeader />
           </Box>
 
-          <Box flex={1}>
+          <Box flex={1} width="100%">
             <BillingTable />
           </Box>
         </Flex>
@@ -39,3 +38,5 @@ export const Billing = () => {
     </Grid>
   );
 };
+
+export default Billing;

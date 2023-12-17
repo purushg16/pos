@@ -1,4 +1,4 @@
-import APIClient from "./api-client";
+import { APIGetClient } from "./api-client";
 
 interface Suppliers {
   supplierId: string;
@@ -7,4 +7,4 @@ interface Suppliers {
   stock: number;
 }
 
-export default new APIClient<Suppliers>("/party/allSupplier");
+export default new APIGetClient<Suppliers>("/party/allSupplier");

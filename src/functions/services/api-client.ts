@@ -1,5 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { Customer } from "./customer-services";
+import axios from "axios";
 
 export interface FetchResponse<T> {
   data: T[];
@@ -12,7 +11,7 @@ const axiosInstance = axios.create({
   //   },
 });
 
-export default class APIClient<T> {
+export class APIGetClient<T> {
   // class attributes
   endpoint: string;
 
@@ -21,14 +20,44 @@ export default class APIClient<T> {
     this.endpoint = endpoint;
   }
 
-  // class methods
-  getAll = (config: AxiosRequestConfig) => {
+  getAll = () => {
     return axiosInstance
-      .get<FetchResponse<T>>(this.endpoint, config)
+      .get<FetchResponse<T>>(this.endpoint)
       .then((res) => res.data);
   };
+}
 
-  postCustomer = (data: Customer) => {
-    return axiosInstance.post(this.endpoint, data);
+export class APIPostClient<T> {
+  // class attributes
+  endpoint: string;
+
+  // constructor
+  constructor(endpoint: string) {
+    this.endpoint = endpoint;
+  }
+
+  postData = (data: T) => {
+    return axiosInstance.post(this.endpoint, data).then((res) => res.data);
   };
 }
+
+// export default class APIClient<T> {
+//   // class attributes
+//   endpoint: string;
+
+//   // constructor
+//   constructor(endpoint: string) {
+//     this.endpoint = endpoint;
+//   }
+
+//   // class methods
+//   getAll = () => {
+//     return axiosInstance
+//       .get<FetchResponse<T>>(this.endpoint)
+//       .then((res) => res.data);
+//   };
+
+//   postCustomer = (newCustomer: Customer) => {
+//     return axiosInstance.post(this.endpoint, newCustomer);
+//   };
+// }

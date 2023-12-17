@@ -2,25 +2,28 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  ButtonGroup,
   Input,
   InputGroup,
   InputLeftElement,
   Menu,
   MenuButton,
   MenuList,
+  Spinner,
   VStack,
   useToast,
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
-import useBillStore from "../../functions/store/BillStore";
+import useBillStore from "../../functions/store/billStore";
 import useProductStore from "../../functions/store/ProductStore";
 import convertToBill from "./convertToBill";
+import { Product } from "../../functions/services/inventory-services";
 
 const BillingItemIdSelector = () => {
   const addBillEntries = useBillStore((s) => s.addBillEntries);
   const searchProductById = useProductStore((s) => s.searchProductById);
-  const uniqueProduct = useProductStore((s) => s.searchedProductList);
+  const searchedProductList = useProductStore((s) => s.searchedProductList);
   const toast = useToast();
 
   const ref = useRef<HTMLInputElement>(null);
@@ -35,8 +38,9 @@ const BillingItemIdSelector = () => {
           <InputGroup>
             <InputLeftElement children={<BsSearch />} />
             <Input
+              focusBorderColor="gray.300"
               ref={ref}
-              placeholder="Search Items..."
+              placeholder="Search Products..."
               variant={"filled"}
               borderRadius={7}
               onChange={() => {
@@ -48,28 +52,39 @@ const BillingItemIdSelector = () => {
           </InputGroup>
         </Box>
 
-        <VStack marginX={3} gap={3}>
-          {uniqueProduct.map((item) => (
-            <Button
-              width="100%"
-              marginX={2}
-              key={item._id}
-              onClick={() => {
-                addBillEntries(convertToBill(item));
-                toast({
-                  title: "Item added to bill",
-                  // description: desc,
-                  status: "success",
-                  duration: 1000,
-                  isClosable: true,
-                  position: "top",
-                });
-              }}
-            >
-              {item.itemName}
-            </Button>
-          ))}
-        </VStack>
+        {searchedProductList ? (
+          <VStack marginX={3} gap={3}>
+            {searchedProductList.map((item: Product) => (
+              <ButtonGroup size="md" isAttached variant="solid" width="100%">
+                <Button padding={2} fontSize="small">
+                  {item.code}
+                </Button>
+                <Button
+                  variant="outline"
+                  textAlign="left"
+                  paddingY={2}
+                  width="100%"
+                  key={item._id}
+                  onClick={() => {
+                    addBillEntries(convertToBill(item));
+                    toast({
+                      title: "Item added to bill",
+                      // description: desc,
+                      status: "success",
+                      duration: 1000,
+                      isClosable: true,
+                      position: "top",
+                    });
+                  }}
+                >
+                  {item.itemName}
+                </Button>
+              </ButtonGroup>
+            ))}
+          </VStack>
+        ) : (
+          <Spinner />
+        )}
       </MenuList>
     </Menu>
   );
