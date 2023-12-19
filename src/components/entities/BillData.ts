@@ -5,6 +5,7 @@ export interface BillProducts {
 }
 
 export interface BillData {
+  _id?: string;
   customer: string;
   billAmount: number;
   gstinNo: string;
