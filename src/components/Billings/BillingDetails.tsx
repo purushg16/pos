@@ -22,7 +22,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import useCustomers from "../../functions/hooks/useCustomers";
 import useEmployee from "../../functions/hooks/useEmployee";
-import { Customer } from "../../functions/services/customer-services";
+import { Customer } from "../entities/Customer";
 import useBillStore, { BillingEntry } from "../../functions/store/billStore";
 import useCustomerStore from "../../functions/store/customerStore";
 import CustomerModal from "../Customers/CustomerModal";

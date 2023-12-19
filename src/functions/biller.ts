@@ -1,4 +1,4 @@
-import { BillData } from "./services/billing-services";
+import { BillData } from "../components/entities/BillData";
 import useBillStore, { BillingEntry } from "./store/billStore";
 import useCustomerStore from "./store/customerStore";
 import useEmployeStore from "./store/employeStore";

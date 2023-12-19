@@ -18,7 +18,7 @@ import { BsSearch } from "react-icons/bs";
 import useBillStore from "../../functions/store/billStore";
 import useProductStore from "../../functions/store/ProductStore";
 import convertToBill from "./convertToBill";
-import { Product } from "../../functions/services/inventory-services";
+import { Product } from "../entities/Product";
 
 interface Props {
   small?: boolean;

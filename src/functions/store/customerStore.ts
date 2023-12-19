@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Customer } from "../services/customer-services";
+import { Customer } from "../../components/entities/Customer";
 
 interface CustomerStore {
   customersList: Customer[];

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { Employee } from "../services/employe-client";
-import { GST } from "../services/gst-client";
+import { Employee } from "../../components/entities/Employee";
+import { GST } from "../../components/entities/GST";
 
 interface EmployeStore {
   gstList: GST[];

@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  Employee,
-  GetEmployee,
-  PostEmployee,
-} from "../services/employe-client";
+import { GetEmployee, PostEmployee } from "../services/employe-client";
+import { Employee } from "../../components/entities/Employee";
 import useEmployeStore from "../store/employeStore";
 
 interface Props {

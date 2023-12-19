@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  Customer,
-  addCustomer,
-  getAllCustomer,
-} from "../services/customer-services";
+import { addCustomer, getAllCustomer } from "../services/customer-services";
+import { Customer } from "../../components/entities/Customer";
 import useCustomerStore from "../store/customerStore";
 
 interface Props {

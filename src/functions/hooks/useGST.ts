@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { GST, GetGST, PostGST } from "../services/gst-client";
+import { GetGST, PostGST } from "../services/gst-client";
+import { GST } from "../../components/entities/GST";
 import useGSTStore from "../store/gstStore";
 
 interface Props {

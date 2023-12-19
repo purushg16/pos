@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Product } from "../services/inventory-services";
+import { Product } from "../../components/entities/Product";
 
 interface ProductStore {
   baseProducts: Product[];

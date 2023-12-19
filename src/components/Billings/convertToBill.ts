@@ -1,4 +1,4 @@
-import { Product } from "../../functions/services/inventory-services";
+import { Product } from "../entities/Product";
 import { BillingEntry } from "../../functions/store/billStore";
 
 const convertToBill = (product: Product) => {

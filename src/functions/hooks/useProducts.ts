@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  Product,
-  getAllProducts,
-  postProduct,
-} from "../services/inventory-services";
+import { getAllProducts, postProduct } from "../services/inventory-services";
+import { Product } from "../../components/entities/Product";
 import useProductStore from "../store/ProductStore";
 
 interface Props {

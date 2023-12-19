@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  Category,
-  GetCategory,
-  PostCategory,
-} from "../services/category-services";
+import { GetCategory, PostCategory } from "../services/category-services";
+import { Category } from "../../components/entities/Category";
 import useCategoryStore from "../store/categoryStore";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Category } from "../services/category-services";
+import { Category } from "../../components/entities/Category";
 
 interface CategoryStore {
   baseCategory: Category[];
