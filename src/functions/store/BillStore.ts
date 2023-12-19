@@ -1,18 +1,18 @@
 import { create } from "zustand";
 
 export interface BillingEntry {
-  billId: number;
+  _id: string;
   productId: number;
   productName: string;
   quantity: number;
   unit?: number;
-  tax: number;
+  salesPrice: number;
   billPrice: number;
-  salePrice: number;
-  purchasePrice: number;
+  taxApplied: number;
   total: number;
-  taxPrice: number;
   quantityPrice: number;
+  taxPrice: number;
+  priceWithoutTax: number;
 }
 
 interface BillingEntryList {
@@ -22,10 +22,38 @@ interface BillingEntryList {
   clearEntries: () => void;
   updateBillEntryQuantity: (productId: number, quantity: number) => void;
   updateBillEntryPrice: (productId: number, price: number) => void;
+
+  paymentMode: string | null;
+  partialPayment: string | undefined;
+  partialAmount: number | null;
+
+  setPaymentMode: (mode: string) => void;
+  setPartialPayment: (partial: string) => void;
+  setPartialAmount: (amount: number) => void;
+
+  billType: string | undefined;
+  setBillType: (billType: string) => void;
+
+  itemHandled: boolean;
+  setItemHandled: (handled: boolean) => void;
 }
 
 const useBillStore = create<BillingEntryList>((set) => ({
   BillEntries: [],
+
+  billType: undefined,
+  setBillType: (billType) => set(() => ({ billType: billType })),
+
+  itemHandled: true,
+  setItemHandled: (handled) => set(() => ({ itemHandled: handled })),
+
+  paymentMode: null,
+  partialPayment: undefined,
+  partialAmount: null,
+
+  setPaymentMode: (mode) => set(() => ({ paymentMode: mode })),
+  setPartialPayment: (partial) => set(() => ({ partialPayment: partial })),
+  setPartialAmount: (amount) => set(() => ({ partialAmount: amount })),
 
   addBillEntries: (newBillingEntry: BillingEntry) =>
     set((store) => ({
@@ -37,21 +65,40 @@ const useBillStore = create<BillingEntryList>((set) => ({
               ? {
                   ...entry,
                   quantity: entry.quantity + 1,
-                  quantityPrice: entry.salePrice * (entry.quantity + 1),
-                  billPrice: entry.salePrice * (entry.quantity + 1),
-                  total: parseFloat(
+                  quantityPrice: entry.salesPrice * (entry.quantity + 1),
+                  billPrice: entry.salesPrice * (entry.quantity + 1),
+                  total: entry.salesPrice * (entry.quantity + 1),
+                  priceWithoutTax: parseFloat(
                     (
-                      entry.salePrice * (entry.quantity + 1) +
-                      entry.taxPrice
+                      (entry.salesPrice / (1 + entry.taxApplied / 100)) *
+                      (entry.quantity + 1)
                     ).toFixed(2)
                   ),
                   taxPrice: parseFloat(
                     (
-                      entry.tax *
-                      entry.purchasePrice *
+                      (entry.salesPrice -
+                        parseFloat(
+                          (
+                            entry.salesPrice /
+                            (1 + entry.taxApplied / 100)
+                          ).toFixed(2)
+                        )) *
                       (entry.quantity + 1)
                     ).toFixed(2)
                   ),
+                  // total: parseFloat(
+                  //   (
+                  //     entry.salePrice * (entry.quantity + 1) +
+                  //     entry.taxPrice
+                  //   ).toFixed(2)
+                  // ),
+                  // taxPrice: parseFloat(
+                  //   (
+                  //     entry.tax *
+                  //     entry.purchasePrice *
+                  //     (entry.quantity + 1)
+                  //   ).toFixed(2)
+                  // ),
                 }
               : entry
           )
@@ -77,11 +124,29 @@ const useBillStore = create<BillingEntryList>((set) => ({
           ? {
               ...entry,
               quantity: quantity || 0,
-              billPrice: entry.salePrice * (quantity || 1),
+              billPrice: entry.salesPrice * (quantity || 1),
               quantityPrice:
-                entry.salePrice * (quantity || 1) * (quantity || 1),
+                entry.salesPrice * (quantity || 1) * (quantity || 1),
+              priceWithoutTax: parseFloat(
+                (
+                  (entry.salesPrice / (1 + entry.taxApplied / 100)) *
+                  quantity
+                ).toFixed(2)
+              ),
+              taxPrice: parseFloat(
+                (
+                  (entry.salesPrice -
+                    parseFloat(
+                      (entry.salesPrice / (1 + entry.taxApplied / 100)).toFixed(
+                        2
+                      )
+                    )) *
+                  quantity
+                ).toFixed(2)
+              ),
               total: parseFloat(
-                (entry.salePrice * (quantity || 1) + entry.taxPrice).toFixed(2)
+                (entry.salesPrice * (quantity || 1)).toFixed(2)
+                // (entry.salesPrice * (quantity || 1) + entry.taxPrice).toFixed(2)
               ),
             }
           : entry
@@ -96,12 +161,13 @@ const useBillStore = create<BillingEntryList>((set) => ({
               ...entry,
               billPrice: price,
               quantityPrice: price * entry.quantity,
-              total: parseFloat(
-                (
-                  (price + entry.purchasePrice * entry.tax) *
-                  entry.quantity
-                ).toFixed(2)
-              ),
+              total: price,
+              // total: parseFloat(
+              //   (
+              //     (price + entry.purchasePrice * entry.tax) *
+              //     entry.quantity
+              //   ).toFixed(2)
+              // ),
             }
           : entry
       ),

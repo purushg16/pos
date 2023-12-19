@@ -2,20 +2,32 @@ import { Product } from "../../functions/services/inventory-services";
 import { BillingEntry } from "../../functions/store/billStore";
 
 const convertToBill = (product: Product) => {
+  const priceWithoutTax = parseFloat(
+    (product.salesPrice / (1 + product.taxRate / 100)).toFixed(2)
+  );
+
+  const taxPrice = parseFloat(
+    (product.salesPrice - priceWithoutTax).toFixed(2)
+  );
+
   return {
-    billId: 0,
+    _id: product._id,
     productId: product.code,
     productName: product.itemName,
     quantity: 1,
-    // quantityPrice: product.salePrice,
+    unit: 1,
+    salesPrice: product.salesPrice,
+    billPrice: product.salesPrice,
+    taxApplied: product.taxRate,
+    total: product.salesPrice,
+    quantityPrice: product.salesPrice,
+    taxPrice: taxPrice,
+    priceWithoutTax: priceWithoutTax,
     // tax: product.taxRate,
-    // billPrice: product.salePrice,
-    // salePrice: product.salePrice,
-    // purchasePrice: product.purchasePrice,
-    // total: parseFloat(
-    //   (product.salePrice + product.taxRate * product.purchasePrice).toFixed(2)
-    // ),
-    // taxPrice: parseFloat((product.taxRate * product.purchasePrice).toFixed(2)),
+    // salePrice: product.salesPrice,
+    // unit: 1,
+    // taxPrice: taxPercent,
+    // total: product.salesPrice,
   } as BillingEntry;
 };
 

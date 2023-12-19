@@ -15,6 +15,9 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import useBillStore from "../../functions/store/billStore";
+import BillingTabItemSelector from "./BillingItemTabSelector";
+import BillTabContainer from "./BillTabContainer";
+import BillingItemIdSelector from "./BillingItemIdSelector";
 
 export const BillingTable = () => {
   const { BillEntries, updateBillEntryQuantity, updateBillEntryPrice } =
@@ -53,7 +56,7 @@ export const BillingTable = () => {
             <Th borderRight="0.1px solid #d9d9d9" textAlign="center">
               Price/Unit
               <hr />
-              <small> without tax </small>
+              <small> with tax </small>
             </Th>
             <Th borderRight="0.1px solid #d9d9d9" textAlign="center">
               {" "}
@@ -128,7 +131,7 @@ export const BillingTable = () => {
 
               {/* Tax App. */}
               <Td borderRight="0.1px solid #d9d9d9" isNumeric>
-                {entry.tax * 100 + "%"}
+                {entry.taxApplied + "%"}
               </Td>
 
               {/* Total */}
@@ -137,6 +140,33 @@ export const BillingTable = () => {
               </Td>
             </Tr>
           ))}
+
+          <Tr>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              <BillTabContainer small />
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              <BillingItemIdSelector small />
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
+            </Td>
+          </Tr>
         </Tbody>
       </Table>
     </TableContainer>

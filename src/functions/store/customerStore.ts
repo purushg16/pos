@@ -6,10 +6,15 @@ interface CustomerStore {
   setCustomers: (customers: Customer[]) => void;
   selectedCustomers: Customer[] | undefined;
   selectCustomers: (name: string) => void;
+
+  currentCustmer: Customer | null;
+  setCurrentCustomer: (customer: Customer) => void;
 }
 
 const useCustomerStore = create<CustomerStore>((set) => ({
   customersList: [],
+  currentCustmer: null,
+  setCurrentCustomer: (customer) => set(() => ({ currentCustmer: customer })),
   setCustomers: (customers) =>
     set(() => ({ customersList: customers, selectedCustomers: customers })),
   selectedCustomers: [],

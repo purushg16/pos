@@ -9,27 +9,28 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useCustomers from "../../functions/hooks/useCustomers";
+import useEmployee from "../../functions/hooks/useEmployee";
 
-const CustomerForm = () => {
+const EmployeeForm = () => {
   const toast = useToast();
 
-  const [newCustomer, editCustomer] = useState({
+  const [newEmploye, editEmploye] = useState({
     name: "",
-    number: parseInt(""),
-    balance: parseInt(""),
+    passcode: parseInt(""),
   });
   const [canSubmit, setSubmit] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-  const { refetch } = useCustomers({
+  const { refetch } = useEmployee({
     type: "POST",
-    customer: newCustomer,
+    employe: newEmploye,
   });
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     refetch().then((res) => {
+      console.log(res);
       const { data, isSuccess, isError } = res;
 
       if (isSuccess) {
@@ -41,7 +42,7 @@ const CustomerForm = () => {
           position: "top",
         });
         setLoading(false);
-        editCustomer({ name: "", number: 0, balance: 0 });
+        editEmploye({ name: "", passcode: 0 });
       } else if (isError) {
         toast({
           title: data.message,
@@ -55,26 +56,26 @@ const CustomerForm = () => {
   };
 
   useEffect(() => {
-    if (newCustomer.name && newCustomer.number) setSubmit(true);
+    if (newEmploye.name && newEmploye.passcode) setSubmit(true);
     else setSubmit(false);
   });
 
   return (
     <Flex alignItems="center" justifyContent="center" height="100%">
       <Box width={500}>
-        <Heading> Add Customer </Heading>
+        <Heading> Add Employee </Heading>
 
         <form onSubmit={(event) => onSubmit(event)}>
           <Flex flexDirection="column" gap={5} marginY={7}>
             <Box>
-              <Text>Customer Name</Text>
+              <Text>Employee Name</Text>
               <Input
                 focusBorderColor="teal"
                 variant="flushed"
-                value={newCustomer.name}
+                value={newEmploye.name}
                 onChange={(event) => {
-                  editCustomer({
-                    ...newCustomer,
+                  editEmploye({
+                    ...newEmploye,
                     name: event.target.value,
                   });
                 }}
@@ -82,34 +83,16 @@ const CustomerForm = () => {
             </Box>
 
             <Box>
-              <Text>Phone Number</Text>
+              <Text>Passcode</Text>
               <Input
                 focusBorderColor="teal"
                 variant="flushed"
                 type="number"
-                value={newCustomer.number}
+                value={newEmploye.passcode}
                 onChange={(event) => {
-                  editCustomer({
-                    ...newCustomer,
-                    number: parseInt(event.target.value),
-                  });
-                }}
-              />
-            </Box>
-
-            <Box>
-              <Text>
-                Pending Balance <small>(optional)</small>
-              </Text>
-              <Input
-                focusBorderColor="teal"
-                variant="flushed"
-                type="number"
-                value={newCustomer.balance}
-                onChange={(event) => {
-                  editCustomer({
-                    ...newCustomer,
-                    balance: parseFloat(event.target.value),
+                  editEmploye({
+                    ...newEmploye,
+                    passcode: parseInt(event.target.value),
                   });
                 }}
               />
@@ -132,4 +115,4 @@ const CustomerForm = () => {
   );
 };
 
-export default CustomerForm;
+export default EmployeeForm;

@@ -32,7 +32,9 @@ const useProducts = ({ type, product }: Props) => {
   return useQuery({
     queryKey: ["products"],
     queryFn: () =>
-      getAllProducts.getAll().then((res) => setProductList(res.data)),
+      getAllProducts.getAll().then((res) => {
+        setProductList(res.data);
+      }),
     staleTime: 0,
     refetchOnWindowFocus: false,
   });

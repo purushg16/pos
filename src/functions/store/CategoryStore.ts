@@ -4,7 +4,7 @@ import { Category } from "../services/category-services";
 interface CategoryStore {
   baseCategory: Category[];
   setCategories: (categories: Category[]) => void;
-  filteredCategories: Category[];
+  filteredCategories: Category[] | undefined;
   filterCategory: (categoryId: string) => void;
   reverseCategory: () => void;
   clearCategoriesFilters: () => void;
@@ -12,7 +12,7 @@ interface CategoryStore {
 
 const useCategoryStore = create<CategoryStore>((set) => ({
   baseCategory: [],
-  filteredCategories: [],
+  filteredCategories: undefined,
 
   setCategories: (categories) =>
     set(() => ({ baseCategory: categories, filteredCategories: categories })),
@@ -20,7 +20,7 @@ const useCategoryStore = create<CategoryStore>((set) => ({
   filterCategory: (catergoryId) =>
     set((store) => ({
       filteredCategories:
-        store.filteredCategories.find(
+        store.filteredCategories?.find(
           (category) => category._id === catergoryId
         )?.children || [],
     })),

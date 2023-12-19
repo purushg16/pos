@@ -21,6 +21,10 @@ const ProductForm = () => {
     taxRate: parseInt(""),
     mrp: parseInt(""),
     suppliers: [],
+    topUnit: "",
+    unitConv: parseInt(""),
+    salesPrice: parseInt(""),
+    zone: "",
   });
   const [canSubmit, setSubmit] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -52,6 +56,10 @@ const ProductForm = () => {
           taxRate: parseInt(""),
           mrp: parseInt(""),
           suppliers: [],
+          topUnit: "",
+          unitConv: parseInt(""),
+          salesPrice: parseInt(""),
+          zone: "",
         });
       } else if (isError) {
         toast({

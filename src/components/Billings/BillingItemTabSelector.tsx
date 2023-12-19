@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardHeader,
   Heading,
@@ -19,17 +20,18 @@ const BillingTabItemSelector = () => {
   const addBillEntries = useBillStore((s) => s.addBillEntries);
   const toast = useToast();
 
+  if (!!!filteredCategories) return <Spinner />;
+
   return (
     <>
       {productsList?.length > 0 ? (
         <>
           <Heading size="md" mb={5}>
-            {" "}
-            Products{" "}
+            Products
           </Heading>
-          <SimpleGrid columns={3} spacing={3} alignItems="center">
-            {productsList ? (
-              productsList.map((product) => (
+          <Box maxHeight={300} overflowY="scroll">
+            <SimpleGrid columns={1} spacing={3} alignItems="center">
+              {productsList.map((product) => (
                 <Card
                   variant="outline"
                   background="#a592d3fa"
@@ -62,48 +64,48 @@ const BillingTabItemSelector = () => {
                     </Heading>
                   </CardHeader>
                 </Card>
-              ))
-            ) : (
-              <Spinner />
-            )}
-          </SimpleGrid>
+              ))}
+            </SimpleGrid>
+          </Box>
         </>
       ) : (
         <>
           <Heading size={"md"} mb={5}>
             Category
           </Heading>
-          <SimpleGrid columns={3} spacing={3} alignItems="center">
-            {filteredCategories ? (
-              filteredCategories.map((category, index) => {
-                return (
-                  <Card
-                    size="lg"
-                    variant="outline"
-                    textAlign="center"
-                    key={index}
-                    onClick={() => {
-                      filterCategory(category._id);
-                      searchProducts(category.name);
-                    }}
-                    cursor="pointer"
-                  >
-                    <CardHeader>
-                      <Heading
-                        size={"sm"}
-                        whiteSpace="nowrap"
-                        textTransform="capitalize"
-                      >
-                        {category.name}
-                      </Heading>
-                    </CardHeader>
-                  </Card>
-                );
-              })
-            ) : (
-              <Spinner />
-            )}
-          </SimpleGrid>
+          <Box maxHeight={300} overflowY="scroll">
+            <SimpleGrid columns={1} spacing={3} alignItems="center">
+              {filteredCategories.length > 0 ? (
+                filteredCategories.map((category, index) => {
+                  return (
+                    <Card
+                      size="lg"
+                      variant="outline"
+                      textAlign="center"
+                      key={index}
+                      onClick={() => {
+                        filterCategory(category._id);
+                        searchProducts(category.name);
+                      }}
+                      cursor="pointer"
+                    >
+                      <CardHeader>
+                        <Heading
+                          size={"sm"}
+                          whiteSpace="nowrap"
+                          textTransform="capitalize"
+                        >
+                          {category.name}
+                        </Heading>
+                      </CardHeader>
+                    </Card>
+                  );
+                })
+              ) : (
+                <Heading size="lg"> No items in this catergory! </Heading>
+              )}
+            </SimpleGrid>
+          </Box>
         </>
       )}
     </>

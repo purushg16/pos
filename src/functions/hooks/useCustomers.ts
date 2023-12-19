@@ -17,7 +17,7 @@ const useCustomers = ({ type, customer }: Props) => {
   if (type == "POST") {
     if (customer)
       return useQuery({
-        queryKey: ["party", "addCustomers"],
+        queryKey: ["party", customer],
         queryFn: () => addCustomer.postData(customer).then((res) => res),
         enabled: false,
       });

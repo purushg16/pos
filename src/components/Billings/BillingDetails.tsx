@@ -12,26 +12,50 @@ import {
   MenuItem,
   MenuList,
   SimpleGrid,
+  Spinner,
   Switch,
   Text,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import CustomerModal from "../Customers/CustomerModal";
+import useCustomers from "../../functions/hooks/useCustomers";
+import useEmployee from "../../functions/hooks/useEmployee";
 import { Customer } from "../../functions/services/customer-services";
 import useBillStore, { BillingEntry } from "../../functions/store/billStore";
-import useCustomers from "../../functions/hooks/useCustomers";
 import useCustomerStore from "../../functions/store/customerStore";
+import CustomerModal from "../Customers/CustomerModal";
+import EmployeSelector from "./EmployeSelector";
+import HandlerSelector from "./HandlerSelector";
+import useEmployeStore from "../../functions/store/employeStore";
+import GSTSelector from "./GSTSelector";
+import useGST from "../../functions/hooks/useGST";
+import BillPaymentModal from "./BillPaymentModal";
+import useGSTStore from "../../functions/store/gstStore";
 
 export const BillingDetails = () => {
   const ref = useRef<HTMLInputElement>(null);
-  const [customer, setCustomer] = useState<Customer>();
   const selectCustomers = useCustomerStore((s) => s.selectCustomers);
   const selectedCustomers = useCustomerStore((s) => s.selectedCustomers);
   const BillEntries = useBillStore((s) => s.BillEntries);
+  const billType = useBillStore((s) => s.billType);
+  const setBillType = useBillStore((s) => s.setBillType);
+  const itemHandled = useBillStore((s) => s.itemHandled);
+  const setItemHandled = useBillStore((s) => s.setItemHandled);
+
+  const currentCustomer = useCustomerStore((s) => s.currentCustmer);
+  const setCurrentCustomer = useCustomerStore((s) => s.setCurrentCustomer);
 
   useCustomers({ type: "GET" });
+  useEmployee({ type: "GET" });
+  useGST({ type: "GET" });
+
+  const currentBiller = useEmployeStore((s) => s.currentBiller);
+  const currentHandler = useEmployeStore((s) => s.currentHandler);
+  const currentGstin = useGSTStore((s) => s.currentGstin);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex flexDirection={"column"} gap={2} height="95vh">
@@ -46,7 +70,7 @@ export const BillingDetails = () => {
             width="100%"
             textAlign="left"
           >
-            {customer?.name || "Select Customer"}
+            {currentCustomer?.name || "Select Customer"}
           </MenuButton>
 
           <MenuList>
@@ -67,24 +91,30 @@ export const BillingDetails = () => {
               </InputGroup>
             </Box>
 
-            <Box height={500} overflowY="scroll">
-              <VStack marginX={3} gap={3}>
-                <CustomerModal />
+            {!selectedCustomers ? (
+              <Spinner />
+            ) : (
+              <Box maxHeight={500} overflowY="scroll">
+                <VStack marginX={3} gap={3}>
+                  <CustomerModal />
 
-                {selectedCustomers?.map((customer: Customer, index: number) => (
-                  <Button
-                    width="100%"
-                    marginX={2}
-                    key={index}
-                    onClick={() => {
-                      setCustomer(customer);
-                    }}
-                  >
-                    {customer.name}
-                  </Button>
-                ))}
-              </VStack>
-            </Box>
+                  {selectedCustomers?.map(
+                    (customer: Customer, index: number) => (
+                      <Button
+                        width="100%"
+                        marginX={2}
+                        key={index}
+                        onClick={() => {
+                          setCurrentCustomer(customer);
+                        }}
+                      >
+                        {customer.name}
+                      </Button>
+                    )
+                  )}
+                </VStack>
+              </Box>
+            )}
           </MenuList>
         </Menu>
       </Box>
@@ -96,7 +126,7 @@ export const BillingDetails = () => {
               <Text size={"sm"} textAlign="right">
                 &#8377;{" "}
                 {BillEntries.reduce((acc, entry: BillingEntry) => {
-                  return acc + entry.quantityPrice;
+                  return acc + entry.priceWithoutTax;
                 }, 0)}
               </Text>
             </SimpleGrid>
@@ -134,48 +164,25 @@ export const BillingDetails = () => {
           </React.Fragment>
         )}
       </Box>
+
       <Box padding={2} border="1px solid #80808030" borderRadius={7} flex={1}>
+        {/* GST */}
+        <SimpleGrid columns={2} alignItems="baseline" my={2}>
+          <Text>GST:</Text>
+          <GSTSelector />
+        </SimpleGrid>
+
+        {/* Biller */}
         <SimpleGrid columns={1} my={2}>
           <SimpleGrid columns={2} alignItems="baseline">
             <Text>Biller Name:</Text>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-                // size={"sm"}
-                textAlign="left"
-                variant="outline"
-              >
-                John Doe
-              </MenuButton>
-              <MenuList>
-                <MenuItem> John Doe </MenuItem>
-                <MenuItem> Micheal</MenuItem>
-                <MenuItem> David </MenuItem>
-                <MenuItem>Marques</MenuItem>
-              </MenuList>
-            </Menu>
+            <EmployeSelector />
           </SimpleGrid>
 
+          {/* Handler */}
           <SimpleGrid columns={2} alignItems="baseline" my={2}>
-            <Text>Biller Name:</Text>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-                // size={"sm"}
-                textAlign="left"
-                variant="outline"
-              >
-                John Doe
-              </MenuButton>
-              <MenuList>
-                <MenuItem> John Doe </MenuItem>
-                <MenuItem> Micheal</MenuItem>
-                <MenuItem> David </MenuItem>
-                <MenuItem>Marques</MenuItem>
-              </MenuList>
-            </Menu>
+            <Text>Handler Name:</Text>
+            <HandlerSelector />
           </SimpleGrid>
 
           <SimpleGrid columns={2} alignItems="baseline" my={2}>
@@ -188,11 +195,15 @@ export const BillingDetails = () => {
                 textAlign="left"
                 variant="outline"
               >
-                Wholesale
+                {billType || "Not Selected"}
               </MenuButton>
               <MenuList>
-                <MenuItem> Wholesale </MenuItem>
-                <MenuItem> Retail</MenuItem>
+                <MenuItem onClick={() => setBillType("wholesale")}>
+                  Wholesale
+                </MenuItem>
+                <MenuItem onClick={() => setBillType("retail")}>
+                  Retail
+                </MenuItem>
               </MenuList>
             </Menu>
           </SimpleGrid>
@@ -200,36 +211,25 @@ export const BillingDetails = () => {
 
         <SimpleGrid columns={2} alignItems="baseline" my={2}>
           <Text>Items Handled:</Text>
-          <Switch id="item-handled" colorScheme="teal" />
-        </SimpleGrid>
-
-        <SimpleGrid columns={2} alignItems="baseline" my={2}>
-          <Text>Handler:</Text>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
-              // size={"sm"}
-              textAlign="left"
-              variant="outline"
-            >
-              John Doe
-            </MenuButton>
-            <MenuList>
-              <MenuItem> John Doe </MenuItem>
-              <MenuItem> Micheal</MenuItem>
-              <MenuItem> David </MenuItem>
-              <MenuItem>Marques</MenuItem>
-            </MenuList>
-          </Menu>
+          <Switch
+            id="item-handled"
+            colorScheme="teal"
+            isChecked={itemHandled}
+            onChange={() => setItemHandled(!itemHandled)}
+          />
         </SimpleGrid>
       </Box>
 
       <Box>
-        <Button colorScheme="teal" width="100%">
-          {" "}
-          Perform Bill{" "}
+        <Button
+          colorScheme="blue"
+          width="100%"
+          isDisabled={!(currentBiller && currentHandler && currentGstin)}
+          onClick={onOpen}
+        >
+          Perform Bill
         </Button>
+        <BillPaymentModal isOpen={isOpen} onClose={onClose} />
       </Box>
     </Flex>
   );

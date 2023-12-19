@@ -1,6 +1,7 @@
 import { APIGetClient, APIPostClient } from "./api-client";
 
 export interface Customer {
+  _id?: string;
   name: string;
   number: number;
   balance: number;

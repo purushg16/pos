@@ -5,6 +5,7 @@ import { ErrorPage } from "../components/ErrorPage";
 import ProductForm from "../components/Products/ProductForm";
 import { SuppliersForm } from "../components/Suppliers/SuppliersForm";
 import Layout from "../components/Layout";
+import EmployeeForm from "../components/Employee/EmployeeForm";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "/addCustomer", element: <CustomerForm /> },
       { path: "/addProduct", element: <ProductForm /> },
       { path: "/addSupplier", element: <SuppliersForm /> },
+      { path: "/addEmployee", element: <EmployeeForm /> },
     ],
   },
 ]);

@@ -1,35 +1,27 @@
 import {
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  Heading,
-  SimpleGrid,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Heading,
+  SimpleGrid,
+  useColorMode,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { MenuCard } from "./MenuCard";
+import { IconType } from "react-icons";
 import {
   BsBox,
-  BsBoxArrowDown,
   BsCalculator,
-  BsCalendarCheck,
   BsKanban,
   BsPersonBadgeFill,
+  BsPersonPlusFill,
 } from "react-icons/bs";
-import {
-  MdCategory,
-  MdOutlinePersonAdd,
-  MdPersonAdd,
-  MdPersonAddAlt,
-  MdPersonAddAlt1,
-  MdPersonPinCircle,
-} from "react-icons/md";
-import { IconType } from "react-icons";
-import { BsPersonPlusFill } from "react-icons/bs";
+import { MdCategory, MdOutlinePersonAdd } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { MenuCard } from "./MenuCard";
 
 interface Props {
   isOpen: boolean;
@@ -43,11 +35,13 @@ const routes: { [key: string]: [route: string, icon: IconType] } = {
   "Add Product": ["/addProduct", BsBox],
   "Add Stock": ["/addSupplier", BsKanban],
   "Add Supplier": ["/addSupplier", MdOutlinePersonAdd],
-  "Add Employee": ["/addSupplier", BsPersonBadgeFill],
+  "Add Employee": ["/addEmployee", BsPersonBadgeFill],
   "Add Category": ["/addSupplier", MdCategory],
 };
 
-export default function MainDrawer({ isOpen, onOpen, onClose }: Props) {
+export default function MainDrawer({ isOpen, onClose }: Props) {
+  const { toggleColorMode, colorMode } = useColorMode();
+
   return (
     <>
       <Drawer
@@ -72,6 +66,17 @@ export default function MainDrawer({ isOpen, onOpen, onClose }: Props) {
                   </Link>
                 </Box>
               ))}
+
+              <Button
+                height="100%"
+                boxShadow="dark-lg"
+                borderRadius={20}
+                onClick={toggleColorMode}
+                colorScheme="yellow"
+              >
+                Toggle Theme
+              </Button>
+
               <Button
                 height="100%"
                 boxShadow="dark-lg"

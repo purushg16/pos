@@ -3,7 +3,6 @@ import { APIGetClient, APIPostClient } from "./api-client";
 interface ProductSupplier {
   supplierId: string;
   purchasePrice: number;
-  salesPrice: number;
   stock: number;
 }
 
@@ -13,9 +12,13 @@ export interface Product {
   barCode: number;
   code: number;
   unit: string;
+  topUnit: string;
+  unitConv: number;
   category: string;
+  salesPrice: number;
   taxRate: number;
   mrp: number;
+  zone: string;
   suppliers?: ProductSupplier[];
 }
 

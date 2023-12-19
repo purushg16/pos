@@ -33,7 +33,10 @@ export const SuppliersForm = () => {
                 variant="flushed"
                 value={newSupplier.name}
                 onChange={(event) => {
-                  editSupplier({ ...newSupplier, name: event.target.value });
+                  editSupplier({
+                    ...newSupplier,
+                    name: event.target.value,
+                  });
                 }}
               />
             </Box>
