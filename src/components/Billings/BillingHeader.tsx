@@ -5,7 +5,11 @@ import useBillStore from "../../functions/store/billStore";
 import BillTabContainer from "./BillTabContainer";
 import BillingItemIdSelector from "./BillingItemIdSelector";
 
-export const BillingHeader = () => {
+interface Props {
+  stock?: boolean;
+}
+
+export const BillingHeader = ({ stock = false }: Props) => {
   const clearEntries = useBillStore((s) => s.clearEntries);
   const BillEntries = useBillStore((s) => s.BillEntries);
   useCategoryies({ type: "GET" });
@@ -14,8 +18,8 @@ export const BillingHeader = () => {
   return (
     <Flex gap={5} alignItems="center" width="100%">
       <Heading size={"1xl"}> Select Products: </Heading>
-      <BillTabContainer />
-      <BillingItemIdSelector />
+      <BillTabContainer stock={stock} />
+      <BillingItemIdSelector stock={stock} />
       <Spacer />
       <Box>
         {BillEntries.length > 0 && (

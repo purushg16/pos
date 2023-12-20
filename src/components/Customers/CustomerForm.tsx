@@ -57,7 +57,7 @@ const CustomerForm = () => {
   useEffect(() => {
     if (newCustomer.name && newCustomer.number) setSubmit(true);
     else setSubmit(false);
-  });
+  }, [newCustomer]);
 
   return (
     <Flex alignItems="center" justifyContent="center" height="100%">

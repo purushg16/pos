@@ -20,14 +20,14 @@ export const MenuBar = () => {
       <ButtonGroup size={"sm"} isAttached>
         <Button
           onClick={() => onOpen()}
-          borderRadius={"20px 20px 0 0"}
+          borderRadius={"20px 0 0 0"}
           size={"lg"}
           colorScheme="teal"
         >
           Menu
         </Button>
         <Link to="/">
-          <Button borderRadius={"20px 20px 0 0"} size={"lg"} colorScheme="gray">
+          <Button borderRadius={"0 20px 0 0"} size={"lg"} colorScheme="gray">
             Billing
           </Button>
         </Link>

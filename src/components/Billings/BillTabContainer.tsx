@@ -16,9 +16,15 @@ import useProductStore from "../../functions/store/ProductStore";
 
 interface Props {
   small?: boolean;
+  selector?: boolean;
+  stock?: boolean;
 }
 
-const BillTabContainer = ({ small = false }: Props) => {
+const BillTabContainer = ({
+  small = false,
+  selector = false,
+  stock = false,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const clearCategoryFilters = useCategoryStore(
@@ -26,6 +32,7 @@ const BillTabContainer = ({ small = false }: Props) => {
   );
   const clearProductFilters = useProductStore((s) => s.clearProductFilters);
   const reverseCategory = useCategoryStore((s) => s.reverseCategory);
+
   return (
     <Box>
       <Button onClick={onOpen} size={small ? "sm" : "md"}>
@@ -45,7 +52,7 @@ const BillTabContainer = ({ small = false }: Props) => {
           <ModalHeader> Select Item </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <BillingTabItemSelector />
+            <BillingTabItemSelector stock={stock} />
           </ModalBody>
           <ModalFooter>
             <Button
@@ -60,6 +67,11 @@ const BillTabContainer = ({ small = false }: Props) => {
               To Top
             </Button>
 
+            {selector && (
+              <Button onClick={onClose} mx={2} colorScheme="green">
+                Select
+              </Button>
+            )}
             <Button
               colorScheme="red"
               onClick={() => {

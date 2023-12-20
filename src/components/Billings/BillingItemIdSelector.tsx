@@ -19,18 +19,45 @@ import useBillStore from "../../functions/store/billStore";
 import useProductStore from "../../functions/store/ProductStore";
 import convertToBill from "./convertToBill";
 import { Product } from "../entities/Product";
+import useStockStore, { StockProduct } from "../../functions/store/stockStore";
 
 interface Props {
   small?: boolean;
+  stock?: boolean;
 }
 
-const BillingItemIdSelector = ({ small = false }: Props) => {
+const BillingItemIdSelector = ({ small = false, stock = false }: Props) => {
   const addBillEntries = useBillStore((s) => s.addBillEntries);
   const searchProductById = useProductStore((s) => s.searchProductById);
   const searchedProductList = useProductStore((s) => s.searchedProductList);
   const toast = useToast();
 
   const ref = useRef<HTMLInputElement>(null);
+
+  const addBillItem = (item: Product) => {
+    addBillEntries(convertToBill(item));
+    toast({
+      title: "Item added to bill",
+      // description: desc,
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+      position: "top",
+    });
+  };
+
+  const addProduct = useStockStore((s) => s.addProducts);
+  const addStockItem = (item: Product) => {
+    const newStock: StockProduct = {
+      productId: item._id!,
+      purchasePrice: item.salesPrice,
+      quantity: 1,
+
+      code: item.code,
+      productName: item.itemName,
+    };
+    addProduct(newStock);
+  };
 
   return (
     <Box>
@@ -81,15 +108,7 @@ const BillingItemIdSelector = ({ small = false }: Props) => {
                     width="100%"
                     key={item._id}
                     onClick={() => {
-                      addBillEntries(convertToBill(item));
-                      toast({
-                        title: "Item added to bill",
-                        // description: desc,
-                        status: "success",
-                        duration: 1000,
-                        isClosable: true,
-                        position: "top",
-                      });
+                      stock ? addStockItem(item) : addBillItem(item);
                     }}
                   >
                     {item.itemName}

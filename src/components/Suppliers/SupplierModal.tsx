@@ -9,15 +9,15 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import CustomerForm from "./CustomerForm";
+import { SuppliersForm } from "./SuppliersForm";
 
-export default function CustomerModal() {
+export default function SupplierModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button width="100%" marginX={2} colorScheme="yellow" onClick={onOpen}>
-        Add Customer
+        Add Supplier
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
@@ -26,7 +26,7 @@ export default function CustomerModal() {
           <ModalHeader />
           <ModalCloseButton />
           <ModalBody>
-            <CustomerForm />
+            <SuppliersForm />
           </ModalBody>
 
           <ModalFooter>

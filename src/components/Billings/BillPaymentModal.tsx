@@ -154,8 +154,8 @@ export default function BillPaymentModal({ isOpen, onClose }: Props) {
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" mr={3}>
-              Close
+            <Button onClick={onClose} mr={3}>
+              Back
             </Button>
             <Button
               colorScheme="blue"

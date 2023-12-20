@@ -1,43 +1,47 @@
 import {
-  Editable,
-  EditableInput,
-  EditablePreview,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Kbd,
-  Table,
   TableContainer,
-  Tbody,
-  Td,
-  Th,
+  Table,
   Thead,
   Tr,
+  Th,
+  Tbody,
+  Td,
+  Editable,
+  EditablePreview,
+  EditableInput,
+  Kbd,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
 } from "@chakra-ui/react";
-import useBillStore from "../../functions/store/billStore";
-import BillTabContainer from "./BillTabContainer";
-import BillingItemIdSelector from "./BillingItemIdSelector";
+import BillTabContainer from "../Billings/BillTabContainer";
+import BillingItemIdSelector from "../Billings/BillingItemIdSelector";
+import useStockStore, { StockProduct } from "../../functions/store/stockStore";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { Product } from "../entities/Product";
 
-interface Props {
-  stock?: boolean;
-}
+const StockTable = () => {
+  const stockProducts = useStockStore((s) => s.stockProducts);
+  const updateStockQuantity = useStockStore((s) => s.updateStockQuantity);
+  const updateStockPrice = useStockStore((s) => s.updateStockPrice);
 
-export const BillingTable = ({ stock = false }: Props) => {
-  const { BillEntries, updateBillEntryQuantity, updateBillEntryPrice } =
-    useBillStore();
+  const addProduct = useStockStore((s) => s.addProducts);
+  const addStockItem = (item: Product) => {
+    const newStock: StockProduct = {
+      productId: item._id!,
+      purchasePrice: item.salesPrice,
+      quantity: 1,
 
-  function numberWithCommas(x: number) {
-    return parseInt(
-      x.toString().split(".")[0].length > 3
-        ? x
-            .toString()
-            .substring(0, x.toString().split(".")[0].length - 3)
-            .replace(/\B(?=(\d{2})+(?!\d))/g, ",") +
-            "," +
-            x.toString().substring(x.toString().split(".")[0].length - 3)
-        : x.toString()
-    ).toFixed(2);
-  }
+      code: item.code,
+      productName: item.itemName,
+    };
+    addProduct(newStock);
+  };
 
   return (
     <TableContainer>
@@ -57,22 +61,14 @@ export const BillingTable = ({ stock = false }: Props) => {
             <Th borderRight="0.1px solid #d9d9d9"> Qty </Th>
             <Th borderRight="0.1px solid #d9d9d9"> Unit </Th>
             <Th borderRight="0.1px solid #d9d9d9" textAlign="center">
-              Price/Unit
+              Purchase Price/Unit
               <hr />
               <small> with tax </small>
-            </Th>
-            <Th borderRight="0.1px solid #d9d9d9" textAlign="center">
-              {" "}
-              Tax Applied{" "}
-            </Th>
-            <Th borderRight="0.1px solid #d9d9d9" textAlign="center">
-              {" "}
-              Total{" "}
             </Th>
           </Tr>
         </Thead>
         <Tbody>
-          {BillEntries.map((entry, index) => (
+          {stockProducts.map((entry, index) => (
             <Tr key={index} borderBottom="1px solid #f1f1f1">
               {/* Serial No. */}
               <Td borderRight="0.1px solid #d9d9d9" isNumeric>
@@ -80,7 +76,7 @@ export const BillingTable = ({ stock = false }: Props) => {
               </Td>
 
               {/* Product Code */}
-              <Td borderRight="0.1px solid #d9d9d9"> {entry.productId} </Td>
+              <Td borderRight="0.1px solid #d9d9d9"> {entry.code} </Td>
 
               {/* Product Name */}
               <Td borderRight="0.1px solid #d9d9d9"> {entry.productName} </Td>
@@ -90,10 +86,7 @@ export const BillingTable = ({ stock = false }: Props) => {
                 <Editable
                   value={entry.quantity.toString()}
                   onChange={(quantity) => {
-                    updateBillEntryQuantity(
-                      entry.productId,
-                      parseInt(quantity)
-                    );
+                    updateStockQuantity(entry.productId, parseInt(quantity));
                   }}
                 >
                   <EditablePreview />
@@ -105,9 +98,21 @@ export const BillingTable = ({ stock = false }: Props) => {
               <Td borderRight="0.1px solid #d9d9d9" isNumeric>
                 <Editable defaultValue="-">
                   <EditablePreview />
-                  <EditableInput />
+                  <EditableInput value={entry.productId} />
                 </Editable>
-                <Kbd marginLeft={"-"}>kg</Kbd>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rightIcon={<ChevronDownIcon />}
+                    size="sm"
+                  >
+                    Kg
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem> kl </MenuItem>
+                    <MenuItem> kl </MenuItem>
+                  </MenuList>
+                </Menu>
               </Td>
 
               {/* Price */}
@@ -121,25 +126,15 @@ export const BillingTable = ({ stock = false }: Props) => {
                   />
                   <Input
                     type="number"
-                    value={entry.billPrice}
-                    onChange={(event) =>
-                      updateBillEntryPrice(
+                    value={entry.purchasePrice}
+                    onChange={(event) => {
+                      updateStockPrice(
                         entry.productId,
                         parseFloat(event.target.value)
-                      )
-                    }
+                      );
+                    }}
                   />
                 </InputGroup>
-              </Td>
-
-              {/* Tax App. */}
-              <Td borderRight="0.1px solid #d9d9d9" isNumeric>
-                {entry.taxApplied + "%"}
-              </Td>
-
-              {/* Total */}
-              <Td borderRight="0.1px solid #d9d9d9" isNumeric>
-                {entry.total}
               </Td>
             </Tr>
           ))}
@@ -149,16 +144,10 @@ export const BillingTable = ({ stock = false }: Props) => {
               -
             </Td>
             <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
-              <BillTabContainer small />
+              <BillTabContainer small stock />
             </Td>
             <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
-              <BillingItemIdSelector small />
-            </Td>
-            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
-              -
-            </Td>
-            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
-              -
+              <BillingItemIdSelector small stock />
             </Td>
             <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
               -
@@ -175,3 +164,5 @@ export const BillingTable = ({ stock = false }: Props) => {
     </TableContainer>
   );
 };
+
+export default StockTable;

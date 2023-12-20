@@ -33,7 +33,7 @@ const routes: { [key: string]: [route: string, icon: IconType] } = {
   Billing: ["/", BsCalculator],
   "Add Customer": ["/addCustomer", BsPersonPlusFill],
   "Add Product": ["/addProduct", BsBox],
-  "Add Stock": ["/addSupplier", BsKanban],
+  "Add Stock": ["/addStock", BsKanban],
   "Add Supplier": ["/addSupplier", MdOutlinePersonAdd],
   "Add Employee": ["/addEmployee", BsPersonBadgeFill],
   "Add Category": ["/addSupplier", MdCategory],

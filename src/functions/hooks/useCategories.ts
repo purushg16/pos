@@ -17,6 +17,7 @@ const useCategoryies = ({ type, category }: Props) => {
         queryKey: ["categories"],
         queryFn: () => PostCategory.postData(category).then((res) => res),
         staleTime: 0,
+        enabled: false,
       });
     }
   }

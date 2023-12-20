@@ -7,12 +7,18 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
+import useProductStore from "../../functions/store/ProductStore";
 import useBillStore from "../../functions/store/billStore";
 import useCategoryStore from "../../functions/store/categoryStore";
-import useProductStore from "../../functions/store/ProductStore";
 import convertToBill from "./convertToBill";
+import useStockStore, { StockProduct } from "../../functions/store/stockStore";
+import { Product } from "../entities/Product";
 
-const BillingTabItemSelector = () => {
+interface Props {
+  stock?: boolean;
+}
+
+const BillingTabItemSelector = ({ stock = false }: Props) => {
   const filteredCategories = useCategoryStore((s) => s.filteredCategories);
   const filterCategory = useCategoryStore((s) => s.filterCategory);
   const productsList = useProductStore((s) => s.productsList);
@@ -21,6 +27,31 @@ const BillingTabItemSelector = () => {
   const toast = useToast();
 
   if (!!!filteredCategories) return <Spinner />;
+
+  const addBillItem = (item: Product) => {
+    addBillEntries(convertToBill(item));
+    toast({
+      title: "Item added to bill",
+      // description: desc,
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+      position: "top",
+    });
+  };
+
+  const addProduct = useStockStore((s) => s.addProducts);
+  const addStockItem = (item: Product) => {
+    const newStock: StockProduct = {
+      productId: item._id!,
+      purchasePrice: item.salesPrice,
+      quantity: 1,
+
+      code: item.code,
+      productName: item.itemName,
+    };
+    addProduct(newStock);
+  };
 
   return (
     <>
@@ -38,19 +69,10 @@ const BillingTabItemSelector = () => {
                   textAlign="center"
                   size="lg"
                   colorScheme="blue"
-                  width="max-content"
                   key={product._id}
                   id={`product` + String(product._id)}
                   onClick={() => {
-                    addBillEntries(convertToBill(product));
-                    toast({
-                      title: "Item added to bill",
-                      // description: desc,
-                      status: "success",
-                      duration: 1000,
-                      isClosable: true,
-                      position: "top",
-                    });
+                    stock ? addStockItem(product) : addBillItem(product);
                   }}
                   cursor="pointer"
                 >
@@ -84,8 +106,8 @@ const BillingTabItemSelector = () => {
                       textAlign="center"
                       key={index}
                       onClick={() => {
-                        filterCategory(category._id);
-                        searchProducts(category.name);
+                        filterCategory(category._id!);
+                        searchProducts(category._id!);
                       }}
                       cursor="pointer"
                     >

@@ -1,4 +1,7 @@
-import { Suppliers } from "../../components/entities/Suppliers";
-import { APIGetClient } from "./api-client";
+import { Supplier } from "../store/suppliersStore";
+import { APIGetClient, APIPostClient } from "./api-client";
 
-export default new APIGetClient<Suppliers>("/party/allSupplier");
+const GetSuppliers = new APIGetClient<Supplier>("party/allSupplier");
+const PostSupplier = new APIPostClient<Supplier>("party/addSupplier");
+
+export { GetSuppliers, PostSupplier };

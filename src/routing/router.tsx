@@ -6,6 +6,8 @@ import ProductForm from "../components/Products/ProductForm";
 import { SuppliersForm } from "../components/Suppliers/SuppliersForm";
 import Layout from "../components/Layout";
 import EmployeeForm from "../components/Employee/EmployeeForm";
+import CategoryForm from "../components/Category/CategoryForm";
+import StockForm from "../components/Stock/StockForm";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,8 @@ const router = createBrowserRouter([
       { path: "/addProduct", element: <ProductForm /> },
       { path: "/addSupplier", element: <SuppliersForm /> },
       { path: "/addEmployee", element: <EmployeeForm /> },
+      { path: "/addCategory", element: <CategoryForm /> },
+      { path: "/addStock", element: <StockForm /> },
     ],
   },
 ]);

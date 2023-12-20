@@ -8,11 +8,13 @@ interface CategoryStore {
   filterCategory: (categoryId: string) => void;
   reverseCategory: () => void;
   clearCategoriesFilters: () => void;
+  currentCategory: Category | undefined;
 }
 
 const useCategoryStore = create<CategoryStore>((set) => ({
   baseCategory: [],
   filteredCategories: undefined,
+  currentCategory: undefined,
 
   setCategories: (categories) =>
     set(() => ({ baseCategory: categories, filteredCategories: categories })),
@@ -23,6 +25,9 @@ const useCategoryStore = create<CategoryStore>((set) => ({
         store.filteredCategories?.find(
           (category) => category._id === catergoryId
         )?.children || [],
+      currentCategory: store.filteredCategories?.find(
+        (category) => category._id === catergoryId
+      ),
     })),
   reverseCategory: () =>
     set((store) => ({

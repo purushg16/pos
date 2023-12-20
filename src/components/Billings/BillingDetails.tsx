@@ -18,7 +18,7 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import useCustomers from "../../functions/hooks/useCustomers";
 import useEmployee from "../../functions/hooks/useEmployee";
@@ -224,7 +224,9 @@ export const BillingDetails = () => {
         <Button
           colorScheme="blue"
           width="100%"
-          isDisabled={!(currentBiller && currentHandler && currentGstin)}
+          isDisabled={
+            !(currentBiller && currentHandler && currentGstin && billType)
+          }
           onClick={onOpen}
         >
           Perform Bill

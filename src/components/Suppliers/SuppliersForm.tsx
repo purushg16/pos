@@ -1,22 +1,57 @@
-import { Flex, Heading, Input, Button, Box, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Input,
+  Button,
+  Box,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import useSuppliers from "../../functions/hooks/useSuppliers";
 
 export const SuppliersForm = () => {
   const [newSupplier, editSupplier] = useState({
     name: "",
-    number: parseInt(""),
-    balance: parseInt(""),
+    phone: parseInt(""),
   });
   const [canSubmit, setSubmit] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const toast = useToast();
+
+  const { refetch } = useSuppliers({ type: "POST", supplier: newSupplier });
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(false);
+    setLoading(true);
+
+    refetch().then((res) => {
+      const { data, isSuccess, isError } = res;
+
+      if (isSuccess) {
+        toast({
+          title: data.msg,
+          status: "success",
+          duration: 1000,
+          isClosable: true,
+          position: "top",
+        });
+        setLoading(false);
+        editSupplier({ name: "", phone: parseInt("") });
+      } else if (isError) {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    });
   };
 
   useEffect(() => {
-    if (newSupplier.name && newSupplier.number) setSubmit(true);
+    if (newSupplier.name && newSupplier.phone) setSubmit(true);
   }, [newSupplier]);
 
   return (
@@ -47,27 +82,11 @@ export const SuppliersForm = () => {
                 focusBorderColor="teal"
                 variant="flushed"
                 type="number"
-                value={newSupplier.number}
+                value={newSupplier.phone}
                 onChange={(event) => {
                   editSupplier({
                     ...newSupplier,
-                    number: parseInt(event.target.value),
-                  });
-                }}
-              />
-            </Box>
-
-            <Box>
-              <Text>Pending Balance</Text>
-              <Input
-                focusBorderColor="teal"
-                variant="flushed"
-                type="number"
-                value={newSupplier.balance}
-                onChange={(event) => {
-                  editSupplier({
-                    ...newSupplier,
-                    balance: parseFloat(event.target.value),
+                    phone: parseInt(event.target.value),
                   });
                 }}
               />

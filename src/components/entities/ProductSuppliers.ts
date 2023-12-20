@@ -1,4 +1,4 @@
-export interface Suppliers {
+export interface ProductSuppliers {
   _id?: string;
   supplierId: string;
   purchasePrice: number;
