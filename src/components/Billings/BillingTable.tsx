@@ -1,4 +1,5 @@
 import {
+  Button,
   Editable,
   EditableInput,
   EditablePreview,
@@ -6,6 +7,10 @@ import {
   InputGroup,
   InputLeftElement,
   Kbd,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Table,
   TableContainer,
   Tbody,
@@ -17,6 +22,7 @@ import {
 import useBillStore from "../../functions/store/billStore";
 import BillTabContainer from "./BillTabContainer";
 import BillingItemIdSelector from "./BillingItemIdSelector";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 interface Props {
   stock?: boolean;
@@ -25,6 +31,8 @@ interface Props {
 export const BillingTable = ({ stock = false }: Props) => {
   const { BillEntries, updateBillEntryQuantity, updateBillEntryPrice } =
     useBillStore();
+
+  const updateUnitPrice = useBillStore((s) => s.updateUnitPrice);
 
   function numberWithCommas(x: number) {
     return parseInt(
@@ -102,12 +110,45 @@ export const BillingTable = ({ stock = false }: Props) => {
               </Td>
 
               {/* Unit */}
-              <Td borderRight="0.1px solid #d9d9d9" isNumeric>
+              {/* <Td borderRight="0.1px solid #d9d9d9" isNumeric>
                 <Editable defaultValue="-">
                   <EditablePreview />
                   <EditableInput />
                 </Editable>
                 <Kbd marginLeft={"-"}>kg</Kbd>
+              </Td> */}
+
+              <Td borderRight="0.1px solid #d9d9d9" isNumeric>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rightIcon={<ChevronDownIcon />}
+                    size="sm"
+                  >
+                    {entry.currentUnit}
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() =>
+                        // setCurrentUnit(entry.productId, entry.unit!, 1)
+                        updateUnitPrice(1, entry.productId, entry.unit)
+                      }
+                    >
+                      {entry.unit}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        updateUnitPrice(
+                          entry.unitConv,
+                          entry.productId,
+                          entry.topUnit
+                        )
+                      }
+                    >
+                      {entry.topUnit}
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               </Td>
 
               {/* Price */}

@@ -29,8 +29,8 @@ const useBilling = ({ type }: Props) => {
 
   const BillProducts = BillEntries.map((entry) => ({
     productId: entry._id,
-    stock: entry.quantity,
-    salesPrice: entry.salesPrice,
+    stock: entry.quantity * entry.currentUnitValue!,
+    salesPrice: entry.billPrice / entry.currentUnitValue!,
   }));
 
   const billData: BillData = {
@@ -48,20 +48,6 @@ const useBilling = ({ type }: Props) => {
     partialAmount: partialAmount!,
     products: BillProducts,
   };
-
-  //   const billData: BillData = {
-  //     customer: "",
-  //     billAmount: 0,
-  //     gstinNo: "",
-  //     billType: "",
-  //     billerName: "",
-  //     itemHandled: true,
-  //     handler: "",
-  //     paymentMode: "",
-  //     payment: "",
-  //     partialAmount: 2,
-  //     products: [],
-  //   };
 
   if (!billData) return;
 

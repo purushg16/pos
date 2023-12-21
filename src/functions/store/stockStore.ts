@@ -16,6 +16,8 @@ interface StockStore {
   setBillNo: (billNo: number) => void;
   addProducts: (products: StockProduct) => void;
   updateStockPrice: (producId: string, amount: number) => void;
+  clearStock: () => void;
+  removeStock: (producId: string) => void;
 }
 
 const useStockStore = create<StockStore>((set) => ({
@@ -24,6 +26,15 @@ const useStockStore = create<StockStore>((set) => ({
   billNo: undefined,
   stockProducts: [],
   total: 0,
+
+  clearStock: () => set(() => ({ stockProducts: [] })),
+
+  removeStock: (productId) =>
+    set((store) => ({
+      stockProducts: store.stockProducts.filter(
+        (product) => product.productId !== productId
+      ),
+    })),
 
   setCurrentUnit: (productId, unit, unitValue) =>
     set((store) => ({

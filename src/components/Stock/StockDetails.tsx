@@ -72,6 +72,8 @@ const StockDetails = () => {
     event.preventDefault();
     setLoading(true);
 
+    console.log(newStock);
+
     refetch().then((res) => {
       const { data, isError, isSuccess } = res;
 

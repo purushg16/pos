@@ -15,7 +15,6 @@ const convertToBill = (product: Product) => {
     productId: product.code,
     productName: product.itemName,
     quantity: 1,
-    unit: 1,
     salesPrice: product.salesPrice,
     billPrice: product.salesPrice,
     taxApplied: product.taxRate,
@@ -23,11 +22,12 @@ const convertToBill = (product: Product) => {
     quantityPrice: product.salesPrice,
     taxPrice: taxPrice,
     priceWithoutTax: priceWithoutTax,
-    // tax: product.taxRate,
-    // salePrice: product.salesPrice,
-    // unit: 1,
-    // taxPrice: taxPercent,
-    // total: product.salesPrice,
+
+    unit: product.unit,
+    topUnit: product.topUnit,
+    unitConv: product.unitConv,
+    currentUnit: product.unit,
+    currentUnitValue: 1,
   } as BillingEntry;
 };
 

@@ -9,6 +9,13 @@ interface BillEntryStore {
   updateBillEntryQuantity: (productId: number, quantity: number) => void;
   updateBillEntryPrice: (productId: number, price: number) => void;
 
+  // unit changes
+  updateUnitPrice: (
+    unitValue: number,
+    productId: number,
+    currentUnit: string
+  ) => void;
+
   paymentMode: string | null;
   partialPayment: string | undefined;
   partialAmount: number | null;
@@ -29,6 +36,43 @@ const useBillStore = create<BillEntryStore>((set) => ({
 
   billType: undefined,
   setBillType: (billType) => set(() => ({ billType: billType })),
+
+  updateUnitPrice: (unitValue, productId, currentUnit) =>
+    set((store) => ({
+      BillEntries: store.BillEntries.map((entry) =>
+        entry.productId === productId
+          ? {
+              ...entry,
+              billPrice: entry.salesPrice * unitValue,
+              currentUnit: currentUnit,
+              currentUnitValue: unitValue,
+
+              total: entry.salesPrice * unitValue * entry.quantity,
+
+              priceWithoutTax: parseFloat(
+                (
+                  (entry.salesPrice / (1 + entry.taxApplied / 100)) *
+                  entry.quantity *
+                  unitValue
+                ).toFixed(2)
+              ),
+
+              taxPrice: parseFloat(
+                (
+                  (entry.salesPrice * unitValue -
+                    parseFloat(
+                      (
+                        (entry.salesPrice * unitValue) /
+                        (1 + entry.taxApplied / 100)
+                      ).toFixed(2)
+                    )) *
+                  entry.quantity
+                ).toFixed(2)
+              ),
+            }
+          : entry
+      ),
+    })),
 
   itemHandled: true,
   setItemHandled: (handled) => set(() => ({ itemHandled: handled })),
@@ -52,20 +96,30 @@ const useBillStore = create<BillEntryStore>((set) => ({
                   ...entry,
                   quantity: entry.quantity + 1,
                   quantityPrice: entry.salesPrice * (entry.quantity + 1),
-                  billPrice: entry.salesPrice * (entry.quantity + 1),
-                  total: entry.salesPrice * (entry.quantity + 1),
+
+                  billPrice:
+                    entry.salesPrice *
+                    entry.currentUnitValue! *
+                    (entry.quantity + 1),
+
+                  total:
+                    entry.salesPrice *
+                    entry.currentUnitValue! *
+                    (entry.quantity + 1),
+
                   priceWithoutTax: parseFloat(
                     (
-                      (entry.salesPrice / (1 + entry.taxApplied / 100)) *
+                      ((entry.salesPrice * entry.currentUnitValue!) /
+                        (1 + entry.taxApplied / 100)) *
                       (entry.quantity + 1)
                     ).toFixed(2)
                   ),
                   taxPrice: parseFloat(
                     (
-                      (entry.salesPrice -
+                      (entry.salesPrice * entry.currentUnitValue! -
                         parseFloat(
                           (
-                            entry.salesPrice /
+                            (entry.salesPrice * entry.currentUnitValue!) /
                             (1 + entry.taxApplied / 100)
                           ).toFixed(2)
                         )) *
@@ -110,28 +164,33 @@ const useBillStore = create<BillEntryStore>((set) => ({
           ? {
               ...entry,
               quantity: quantity || 0,
-              billPrice: entry.salesPrice * (quantity || 1),
               quantityPrice:
                 entry.salesPrice * (quantity || 1) * (quantity || 1),
               priceWithoutTax: parseFloat(
                 (
                   (entry.salesPrice / (1 + entry.taxApplied / 100)) *
-                  quantity
+                  quantity *
+                  entry.currentUnitValue!
                 ).toFixed(2)
               ),
               taxPrice: parseFloat(
                 (
-                  (entry.salesPrice -
+                  (entry.salesPrice * entry.currentUnitValue! -
                     parseFloat(
-                      (entry.salesPrice / (1 + entry.taxApplied / 100)).toFixed(
-                        2
-                      )
+                      (
+                        (entry.salesPrice * entry.currentUnitValue!) /
+                        (1 + entry.taxApplied / 100)
+                      ).toFixed(2)
                     )) *
                   quantity
                 ).toFixed(2)
               ),
               total: parseFloat(
-                (entry.salesPrice * (quantity || 1)).toFixed(2)
+                (
+                  entry.salesPrice *
+                  (quantity || 0) *
+                  entry.currentUnitValue!
+                ).toFixed(2)
                 // (entry.salesPrice * (quantity || 1) + entry.taxPrice).toFixed(2)
               ),
             }
@@ -148,6 +207,28 @@ const useBillStore = create<BillEntryStore>((set) => ({
               billPrice: price,
               quantityPrice: price * entry.quantity,
               total: price,
+
+              priceWithoutTax: parseFloat(
+                (
+                  (price / (1 + entry.taxApplied / 100)) *
+                  entry.quantity *
+                  entry.currentUnitValue!
+                ).toFixed(2)
+              ),
+
+              taxPrice: parseFloat(
+                (
+                  (price * entry.currentUnitValue! -
+                    parseFloat(
+                      (
+                        (price * entry.currentUnitValue!) /
+                        (1 + entry.taxApplied / 100)
+                      ).toFixed(2)
+                    )) *
+                  entry.quantity
+                ).toFixed(2)
+              ),
+
               // total: parseFloat(
               //   (
               //     (price + entry.purchasePrice * entry.tax) *

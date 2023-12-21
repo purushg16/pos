@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -28,6 +29,7 @@ const StockTable = () => {
   const updateStockPrice = useStockStore((s) => s.updateStockPrice);
   const setCurrentUnit = useStockStore((s) => s.setCurrentUnit);
   const updateUnitQuantity = useStockStore((s) => s.updateUnitQuantity);
+  const removeItem = useStockStore((s) => s.removeStock);
 
   return (
     <TableContainer>
@@ -51,6 +53,7 @@ const StockTable = () => {
               <hr />
               <small> with tax </small>
             </Th>
+            <Th borderRight="0.1px solid #d9d9d9"> Remove </Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -119,7 +122,7 @@ const StockTable = () => {
                   <InputLeftElement
                     pointerEvents="none"
                     color="gray.300"
-                    fontSize="1em"
+                    fontSize="0.7em"
                     children="Rs."
                   />
                   <Input
@@ -132,7 +135,26 @@ const StockTable = () => {
                       );
                     }}
                   />
+                  <InputRightElement
+                    pointerEvents="none"
+                    color="gray.300"
+                    fontSize="0.7em"
+                    marginRight={1}
+                    children={`/${entry.currentUnit}`}
+                  />
                 </InputGroup>
+              </Td>
+
+              <Td borderRight="0.1px solid #d9d9d9">
+                <Button
+                  colorScheme="red"
+                  size="sm"
+                  onClick={() => {
+                    removeItem(entry.productId);
+                  }}
+                >
+                  -
+                </Button>
               </Td>
             </Tr>
           ))}
@@ -146,6 +168,9 @@ const StockTable = () => {
             </Td>
             <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
               <BillingItemIdSelector small stock />
+            </Td>
+            <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
+              -
             </Td>
             <Td borderRight="0.1px solid #d9d9d9" background="gray.700">
               -

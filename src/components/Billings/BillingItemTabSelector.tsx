@@ -62,7 +62,7 @@ const BillingTabItemSelector = ({ stock = false }: Props) => {
 
   return (
     <>
-      {productsList?.length > 0 ? (
+      {!stock && productsList?.length > 0 ? (
         <>
           <Heading size="md" mb={5}>
             Products
@@ -131,7 +131,11 @@ const BillingTabItemSelector = ({ stock = false }: Props) => {
                   );
                 })
               ) : (
-                <Heading size="lg"> No items in this catergory! </Heading>
+                <Heading size="lg">
+                  {!stock
+                    ? "No items in this catergory!"
+                    : "Add products in this category!"}
+                </Heading>
               )}
             </SimpleGrid>
           </Box>

@@ -271,7 +271,7 @@ const ProductForm = () => {
                   <Button width="100%">
                     {currentCategory ? currentCategory.name : "-"}{" "}
                   </Button>
-                  <BillTabContainer selector inline />
+                  <BillTabContainer selector inline stock />
                 </ButtonGroup>
               </Box>
 

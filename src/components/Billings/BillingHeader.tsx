@@ -4,6 +4,7 @@ import useProducts from "../../functions/hooks/useProducts";
 import useBillStore from "../../functions/store/billStore";
 import BillTabContainer from "./BillTabContainer";
 import BillingItemIdSelector from "./BillingItemIdSelector";
+import useStockStore from "../../functions/store/stockStore";
 
 interface Props {
   stock?: boolean;
@@ -12,6 +13,9 @@ interface Props {
 export const BillingHeader = ({ stock = false }: Props) => {
   const clearEntries = useBillStore((s) => s.clearEntries);
   const BillEntries = useBillStore((s) => s.BillEntries);
+
+  const stockProducts = useStockStore((s) => s.stockProducts);
+  const clearStock = useStockStore((s) => s.clearStock);
   useCategoryies({ type: "GET" });
   useProducts({ type: "GET" });
 
@@ -21,20 +25,37 @@ export const BillingHeader = ({ stock = false }: Props) => {
       <BillTabContainer stock={stock} />
       <BillingItemIdSelector stock={stock} />
       <Spacer />
-      <Box>
-        {BillEntries.length > 0 && (
-          <Button
-            colorScheme="red"
-            alignSelf="end"
-            variant="outline"
-            onClick={() => {
-              clearEntries();
-            }}
-          >
-            Clear
-          </Button>
-        )}
-      </Box>
+      {!stock && (
+        <Box>
+          {BillEntries.length > 0 && (
+            <Button
+              colorScheme="red"
+              alignSelf="end"
+              variant="outline"
+              onClick={() => {
+                clearEntries();
+              }}
+            >
+              Clear
+            </Button>
+          )}
+        </Box>
+      )}
+
+      {stock && (
+        <Box>
+          {stockProducts.length > 0 && (
+            <Button
+              colorScheme="red"
+              alignSelf="end"
+              variant="outline"
+              onClick={clearStock}
+            >
+              Clear
+            </Button>
+          )}
+        </Box>
+      )}
     </Flex>
   );
 };

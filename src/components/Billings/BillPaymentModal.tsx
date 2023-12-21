@@ -45,12 +45,9 @@ export default function BillPaymentModal({ isOpen, onClose }: Props) {
   const toast = useToast();
 
   const onSubmitBill = () => {
+    setLoading(true);
     refetch().then((res) => {
       const { data, isSuccess, isError } = res;
-
-      console.log(data);
-      console.log(isSuccess);
-
       if (isSuccess) {
         toast({
           title: data.msg,
@@ -60,6 +57,7 @@ export default function BillPaymentModal({ isOpen, onClose }: Props) {
           position: "top",
         });
         setLoading(false);
+        onClose();
       } else if (isError) {
         toast({
           title: data.message,
@@ -68,9 +66,9 @@ export default function BillPaymentModal({ isOpen, onClose }: Props) {
           isClosable: true,
           position: "top",
         });
+        setLoading(false);
       }
     });
-    onClose();
   };
 
   return (

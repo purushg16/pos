@@ -2,8 +2,6 @@ export interface BillingEntry {
   _id: string;
   productId: number;
   productName: string;
-  quantity: number;
-  unit?: number;
   salesPrice: number;
   billPrice: number;
   taxApplied: number;
@@ -11,4 +9,12 @@ export interface BillingEntry {
   quantityPrice: number;
   taxPrice: number;
   priceWithoutTax: number;
+
+  unit: string;
+  topUnit: string;
+  unitConv: number;
+
+  quantity: number;
+  currentUnitValue: number | undefined;
+  currentUnit: string | undefined;
 }
