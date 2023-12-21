@@ -1,29 +1,28 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  SimpleGrid,
-  VStack,
-  Text,
-  Switch,
+  Input,
+  InputGroup,
+  InputLeftAddon,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Input,
-  InputGroup,
-  InputLeftAddon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid,
+  Text,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
-import useBillStore from "../../functions/store/billStore";
+import { useState } from "react";
 import useBilling from "../../functions/hooks/useBilling";
-import { useEffect, useState } from "react";
+import useBillStore from "../../functions/store/billStore";
 
 interface Props {
   isOpen: boolean;
