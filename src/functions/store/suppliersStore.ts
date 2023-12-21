@@ -1,9 +1,5 @@
 import { create } from "zustand";
-
-export interface Supplier {
-  name: string;
-  phone: number;
-}
+import { Supplier } from "../../components/entities/Supplier";
 
 interface SupplierStore {
   suppliersList: Supplier[];

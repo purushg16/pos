@@ -1,4 +1,4 @@
-import { Supplier } from "../store/suppliersStore";
+import { Supplier } from "../../components/entities/Supplier";
 import { APIGetClient, APIPostClient } from "./api-client";
 
 const GetSuppliers = new APIGetClient<Supplier>("party/allSupplier");

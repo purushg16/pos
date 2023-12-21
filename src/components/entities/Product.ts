@@ -1,4 +1,4 @@
-import { ProductSupplier } from "../../functions/services/inventory-services";
+import { ProductSupplier } from "./ProductSupplier";
 
 export interface Product {
   _id?: string;

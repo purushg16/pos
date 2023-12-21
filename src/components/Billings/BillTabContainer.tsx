@@ -9,21 +9,26 @@ import {
   ModalFooter,
   useDisclosure,
   Box,
+  IconButton,
 } from "@chakra-ui/react";
 import BillingTabItemSelector from "./BillingItemTabSelector";
 import useCategoryStore from "../../functions/store/categoryStore";
 import useProductStore from "../../functions/store/ProductStore";
+import useCategoryies from "../../functions/hooks/useCategories";
+import { EditIcon } from "@chakra-ui/icons";
 
 interface Props {
   small?: boolean;
   selector?: boolean;
   stock?: boolean;
+  inline?: boolean;
 }
 
 const BillTabContainer = ({
   small = false,
   selector = false,
   stock = false,
+  inline = false,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -32,12 +37,29 @@ const BillTabContainer = ({
   );
   const clearProductFilters = useProductStore((s) => s.clearProductFilters);
   const reverseCategory = useCategoryStore((s) => s.reverseCategory);
+  useCategoryies({ type: "GET" });
 
   return (
     <Box>
-      <Button onClick={onOpen} size={small ? "sm" : "md"}>
-        {small ? "Pick" : "using Category"}
-      </Button>
+      {inline ? (
+        <IconButton
+          colorScheme="teal"
+          aria-label="Search database"
+          icon={<EditIcon />}
+          onClick={onOpen}
+        />
+      ) : (
+        <Button onClick={onOpen} size={small ? "sm" : "md"}>
+          {small
+            ? "Pick"
+            : selector
+            ? inline
+              ? "edit"
+              : "Select Category"
+            : "using Category"}
+        </Button>
+      )}
+
       <Modal
         closeOnOverlayClick={false}
         isOpen={isOpen}

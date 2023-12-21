@@ -1,5 +1,5 @@
 import { Product } from "../entities/Product";
-import { BillingEntry } from "../../functions/store/billStore";
+import { BillingEntry } from "../entities/BillingEntry";
 
 const convertToBill = (product: Product) => {
   const priceWithoutTax = parseFloat(

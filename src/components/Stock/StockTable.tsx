@@ -1,47 +1,33 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
+  Button,
   Editable,
-  EditablePreview,
   EditableInput,
-  Kbd,
+  EditablePreview,
+  Input,
   InputGroup,
   InputLeftElement,
-  Input,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  Button,
+  MenuList,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
+import useStockStore from "../../functions/store/stockStore";
 import BillTabContainer from "../Billings/BillTabContainer";
 import BillingItemIdSelector from "../Billings/BillingItemIdSelector";
-import useStockStore, { StockProduct } from "../../functions/store/stockStore";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Product } from "../entities/Product";
 
 const StockTable = () => {
   const stockProducts = useStockStore((s) => s.stockProducts);
-  const updateStockQuantity = useStockStore((s) => s.updateStockQuantity);
   const updateStockPrice = useStockStore((s) => s.updateStockPrice);
-
-  const addProduct = useStockStore((s) => s.addProducts);
-  const addStockItem = (item: Product) => {
-    const newStock: StockProduct = {
-      productId: item._id!,
-      purchasePrice: item.salesPrice,
-      quantity: 1,
-
-      code: item.code,
-      productName: item.itemName,
-    };
-    addProduct(newStock);
-  };
+  const setCurrentUnit = useStockStore((s) => s.setCurrentUnit);
+  const updateUnitQuantity = useStockStore((s) => s.updateUnitQuantity);
 
   return (
     <TableContainer>
@@ -58,8 +44,8 @@ const StockTable = () => {
             <Th borderRight="0.1px solid #d9d9d9"> # </Th>
             <Th borderRight="0.1px solid #d9d9d9"> Item Code </Th>
             <Th borderRight="0.1px solid #d9d9d9"> Item Name </Th>
-            <Th borderRight="0.1px solid #d9d9d9"> Qty </Th>
             <Th borderRight="0.1px solid #d9d9d9"> Unit </Th>
+            <Th borderRight="0.1px solid #d9d9d9"> Qty </Th>
             <Th borderRight="0.1px solid #d9d9d9" textAlign="center">
               Purchase Price/Unit
               <hr />
@@ -81,38 +67,50 @@ const StockTable = () => {
               {/* Product Name */}
               <Td borderRight="0.1px solid #d9d9d9"> {entry.productName} </Td>
 
-              {/*  Quantity  */}
-              <Td borderRight="0.1px solid #d9d9d9" isNumeric>
-                <Editable
-                  value={entry.quantity.toString()}
-                  onChange={(quantity) => {
-                    updateStockQuantity(entry.productId, parseInt(quantity));
-                  }}
-                >
-                  <EditablePreview />
-                  <EditableInput />
-                </Editable>
-              </Td>
-
               {/* Unit */}
               <Td borderRight="0.1px solid #d9d9d9" isNumeric>
-                <Editable defaultValue="-">
-                  <EditablePreview />
-                  <EditableInput value={entry.productId} />
-                </Editable>
                 <Menu>
                   <MenuButton
                     as={Button}
                     rightIcon={<ChevronDownIcon />}
                     size="sm"
                   >
-                    Kg
+                    {entry.currentUnit}
                   </MenuButton>
                   <MenuList>
-                    <MenuItem> kl </MenuItem>
-                    <MenuItem> kl </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        setCurrentUnit(entry.productId, entry.unit!, 1)
+                      }
+                    >
+                      {entry.unit}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        setCurrentUnit(
+                          entry.productId,
+                          entry.topUnit!,
+                          entry.unitConv
+                        )
+                      }
+                    >
+                      {entry.topUnit}
+                    </MenuItem>
                   </MenuList>
                 </Menu>
+              </Td>
+
+              {/*  Quantity  */}
+              <Td borderRight="0.1px solid #d9d9d9" isNumeric>
+                <Editable
+                  value={entry.quantity.toString()}
+                  onChange={(quantity) => {
+                    updateUnitQuantity(entry.productId, parseInt(quantity));
+                  }}
+                >
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
               </Td>
 
               {/* Price */}

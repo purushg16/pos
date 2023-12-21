@@ -40,24 +40,3 @@ export class APIPostClient<T> {
     return axiosInstance.post(this.endpoint, data).then((res) => res.data);
   };
 }
-
-// export default class APIClient<T> {
-//   // class attributes
-//   endpoint: string;
-
-//   // constructor
-//   constructor(endpoint: string) {
-//     this.endpoint = endpoint;
-//   }
-
-//   // class methods
-//   getAll = () => {
-//     return axiosInstance
-//       .get<FetchResponse<T>>(this.endpoint)
-//       .then((res) => res.data);
-//   };
-
-//   postCustomer = (newCustomer: Customer) => {
-//     return axiosInstance.post(this.endpoint, newCustomer);
-//   };
-// }

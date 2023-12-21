@@ -11,7 +11,8 @@ import useProductStore from "../../functions/store/ProductStore";
 import useBillStore from "../../functions/store/billStore";
 import useCategoryStore from "../../functions/store/categoryStore";
 import convertToBill from "./convertToBill";
-import useStockStore, { StockProduct } from "../../functions/store/stockStore";
+import useStockStore from "../../functions/store/stockStore";
+import { StockProduct } from "../entities/StockProduct";
 import { Product } from "../entities/Product";
 
 interface Props {
@@ -45,10 +46,16 @@ const BillingTabItemSelector = ({ stock = false }: Props) => {
     const newStock: StockProduct = {
       productId: item._id!,
       purchasePrice: item.salesPrice,
-      quantity: 1,
+      stock: 1,
 
       code: item.code,
       productName: item.itemName,
+      unit: item.unit,
+      topUnit: item.topUnit,
+      quantity: parseInt(""),
+      currentUnitValue: 1,
+      unitConv: item.unitConv,
+      currentUnit: item.unit,
     };
     addProduct(newStock);
   };

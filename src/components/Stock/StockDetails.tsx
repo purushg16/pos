@@ -16,11 +16,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import useStock from "../../functions/hooks/useStock";
 import useSuppliers from "../../functions/hooks/useSuppliers";
-import useSupplierStore, {
-  Supplier,
-} from "../../functions/store/suppliersStore";
 import useStockStore from "../../functions/store/stockStore";
+import useSupplierStore from "../../functions/store/suppliersStore";
+import { Supplier } from "../entities/Supplier";
 import SupplierModal from "../Suppliers/SupplierModal";
 
 const StockDetails = () => {
@@ -47,13 +47,30 @@ const StockDetails = () => {
   }, [amount, stockProducts, billNo, currentSupplier]);
 
   useSuppliers({ type: "GET" });
-  const { refetch } = useSuppliers({ type: "POST" });
+
+  const newStock = {
+    supplierId: currentSupplier?._id!,
+    amount: amount!,
+    billNo: billNo!,
+    products: stockProducts.map((product) => {
+      return {
+        productId: product.productId!,
+        purchasePrice: parseFloat(
+          (product.purchasePrice / product.currentUnitValue!).toFixed(2)
+        ),
+        stock: product.stock!,
+      };
+    }),
+  };
+
+  const { refetch } = useStock({ stock: newStock });
 
   const toast = useToast();
 
   const onSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     setLoading(true);
+
     refetch().then((res) => {
       const { data, isError, isSuccess } = res;
 

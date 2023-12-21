@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GetSuppliers, PostSupplier } from "../services/suppliers-services";
-import useSupplierStore, { Supplier } from "../store/suppliersStore";
+import useSupplierStore from "../store/suppliersStore";
+import { Supplier } from "../../components/entities/Supplier";
 
 interface Props {
   type: "GET" | "POST";

@@ -19,7 +19,8 @@ import useBillStore from "../../functions/store/billStore";
 import useProductStore from "../../functions/store/ProductStore";
 import convertToBill from "./convertToBill";
 import { Product } from "../entities/Product";
-import useStockStore, { StockProduct } from "../../functions/store/stockStore";
+import useStockStore from "../../functions/store/stockStore";
+import { StockProduct } from "../entities/StockProduct";
 
 interface Props {
   small?: boolean;
@@ -50,11 +51,19 @@ const BillingItemIdSelector = ({ small = false, stock = false }: Props) => {
   const addStockItem = (item: Product) => {
     const newStock: StockProduct = {
       productId: item._id!,
-      purchasePrice: item.salesPrice,
-      quantity: 1,
+      purchasePrice: parseInt(""),
+      stock: 0,
+      quantity: 0,
 
       code: item.code,
       productName: item.itemName,
+
+      unit: item.unit,
+      topUnit: item.topUnit,
+      unitConv: item.unitConv,
+
+      currentUnit: item.unit,
+      currentUnitValue: 1,
     };
     addProduct(newStock);
   };
