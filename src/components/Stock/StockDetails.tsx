@@ -36,6 +36,7 @@ const StockDetails = () => {
   const setBillNo = useStockStore((s) => s.setBillNo);
 
   const amount = useStockStore((s) => s.amount);
+  const total = useStockStore((s) => s.total);
   const stockProducts = useStockStore((s) => s.stockProducts);
   const [canSubmit, setSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -186,7 +187,7 @@ const StockDetails = () => {
               placeholder="Enter Bill Number"
               variant={"filled"}
               borderRadius={7}
-              value={amount?.toString()}
+              value={total?.toString()}
             />
           </InputGroup>
         </Box>

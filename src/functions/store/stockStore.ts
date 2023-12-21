@@ -7,6 +7,7 @@ interface StockStore {
   amount: number | null;
   billNo: number | undefined;
   stockProducts: StockProduct[];
+  total: number | null;
 
   setCurrentUnit: (productId: string, unit: string, unitValue: number) => void;
   updateUnitQuantity: (productId: string, quanity: number) => void;
@@ -22,6 +23,7 @@ const useStockStore = create<StockStore>((set) => ({
   amount: 0,
   billNo: undefined,
   stockProducts: [],
+  total: 0,
 
   setCurrentUnit: (productId, unit, unitValue) =>
     set((store) => ({
@@ -34,6 +36,11 @@ const useStockStore = create<StockStore>((set) => ({
               stock: unitValue * product.quantity,
             }
           : product
+      ),
+
+      total: store.stockProducts.reduce(
+        (acc, product) => acc + product.purchasePrice * product.quantity,
+        0
       ),
 
       amount: store.stockProducts.reduce(
@@ -66,6 +73,12 @@ const useStockStore = create<StockStore>((set) => ({
           )
         : [...store.stockProducts, newProduct],
 
+      total:
+        store.stockProducts.reduce(
+          (acc, product) => acc + product.purchasePrice * product.quantity,
+          0
+        ) + newProduct.purchasePrice,
+
       amount:
         store.stockProducts.reduce(
           (acc, product) => acc + product.purchasePrice * product.stock,
@@ -79,6 +92,15 @@ const useStockStore = create<StockStore>((set) => ({
         product.productId === producId
           ? { ...product, purchasePrice: price }
           : product
+      ),
+
+      total: store.stockProducts.reduce(
+        (acc, product) =>
+          acc +
+          (product.productId !== producId
+            ? product.purchasePrice * product.quantity
+            : price * product.quantity),
+        0
       ),
 
       amount: store.stockProducts.reduce(
@@ -101,6 +123,15 @@ const useStockStore = create<StockStore>((set) => ({
               stock: product.currentUnitValue! * (quanity || 0),
             }
           : product
+      ),
+
+      total: store.stockProducts.reduce(
+        (acc, product) =>
+          acc +
+          (product.productId === productId
+            ? product.purchasePrice * (quanity || 0)
+            : product.purchasePrice * product.quantity),
+        0
       ),
 
       amount: store.stockProducts.reduce(
